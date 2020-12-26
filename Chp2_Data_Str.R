@@ -14,9 +14,9 @@
 # have 3 common properties
 typeof() # type
 length() # how many elements it contains
-attrib() # additional arbitrary metadata
+attri() # additional arbitrary metadata
 
-# differ in: atomic vector has the same type of all elements
+# differ in:atomic vector has the same type of all elements
 # list can have different types of elements
 
 # to test if an obj is an atomic vector or a list
@@ -264,6 +264,59 @@ table(sex_factor)
 # if need string - like behavior
 
 
+#------------------------#
+# 2.3 Matrices and Arrays
+#------------------------#
+
+# Adding a dim() to an atomic vector allows
+# it to behave like a multi - dimensional array
+# A special case of the array is the matrix
+# which has two dim
+
+# matrix 
+a <- matrix(1:6, nrow= 2, ncol = 3)
+
+# array
+# use one vector argument to describe all dimensions
+b <- array(1:12, c(2, 3, 2))
+
+# can also modify an obj already in place by setting dim()
+c <- 1:6
+dim(c) <- c(3, 2)
+c
+
+dim(c) <- c(2, 3)
+
+rownames(a) <- c("A", "B")
+colnames(a) <- c('c', "d", "e")
+a
+
+length(b)
+dim(b)
+dimnames(b) <- list(c("One", "Two"),
+                    c("C1", "C2", "C3"),
+                    c("Layer1", "Layer2"))
+b
+
+# Note:
+# Vectors are not the only 1-d data structure
+# matrix can have single row/col, 
+# arrays can just have one single dimension
+# they print out quite similar
+# but they are structurly different
+# always use str()
+
+str(c(1:3))  # 1-d vector
+# int [1:3] 1 2 3
+
+str(matrix(1:3, ncol = 1)) # column vector
+# int [1:3, 1] 1 2 3
+
+str(matrix(1:3, nrow = 1)) # row vector
+# int [1, 1:3] 1 2 3
+
+str(array(1:3, 3)) # 1-d array
+# int [1:3(1d)] 1 2 3
 
 
 

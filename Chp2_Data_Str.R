@@ -123,13 +123,145 @@ is.list(mod) # [1] TRUE
 #---------------#
 # 2.2 Attributes 
 #---------------#
+# attributes can be thought of as a named list (unique names)
+# can be accessed individually with attr()
+# or all at once (as one list) with attributes()
+
+y <- 1:10
+attr(y, "attribute 1") <- "y is a vector"
+attr(y, "attribute 2") <- "its length is 10"
+attr(y, "attribute 3") <- "it has 10 elements"
+attr(y, "attribute 4") <- "each of its element is integer"
+
+
+attributes(y)
+# $`attribute 1`
+# [1] "y is a vector"
+
+# $`attribute 2`
+# [1] "its length is 10"
+
+# get a single attribute of y
+attr(y, "attribute 2") # "its length is 10"
+
+str(attributes(y))
+# List of 4
+# $ attribute 1: chr "y is a vector"
+# $ attribute 2: chr "its length is 10"
+# $ attribute 3: chr "it has 10 elements"
+# $ attribute 4: chr "each of its element is integer"
+
+y # has both a vector of values and a list of 4 named lists
+#  [1]  1  2  3  4  5  6  7  8  9 10
+# attr(,"attribute 1")
+# [1] "y is a vector"
+# attr(,"attribute 2")
+# [1] "its length is 10"
+# attr(,"attribute 3")
+# [1] "it has 10 elements"
+# attr(,"attribute 4")
+# [1] "each of its element is integer"
+
+
+# By default, most attributes lost when modifying a vector
+attributes(sum(y)) # NULL
+attributes(y[1]) # NULL
+
+
+# only 3 most important attributes won't lost
+# Names: a chr vector giving each element a name
+# Dimensions: used to turn vectors into matrices and arrays
+# Class: to implement the S3 object system
+
+# each of above attributes has their own 
+# accessor function to get and set values
+# names()
+# dim()
+# class()
 
 
 
+## 2.2.0.1 Names ##
+# 3 ways to create names:
+
+# when 1st creating it
+x <- c(a = 1, b = 2, c = 3)
+
+# modify an existing vector in place:
+x <- 1:3
+names(x) <- c("a", "b", "c")
+x
+
+
+# creating a modified copy of a vector
+x <-setNames(object = 1:3, c("a", "b", "c"))
+x
+
+
+# not all elements of a vector need ot have names
+# if some names are missing, 
+# names() will return an empty string for these elements
+# if all names are missing, then return NULL
+
+y <- c(a = 0, 1, 2)
+names(y) # [1] "a" ""  "" 
+
+z <- c(0, 1, 2)
+names(z)  #NULL
+
+# to remove names in place
+names(x) <- NULL
+names(x) # NULL
 
 
 
+#---------------#
+# 2.2.1 Factors 
+#---------------#
+# one important use of attributes is to define vectors
+# A factor is a vector that can contain only predefined values
+# and is used to store categoriacal data
 
+# factors are built on top of integer vectors
+# usign two attributes: 
+# class(), "factor", which makes them behave differently from regular integer vectors
+# levels(), which define the set of values allowed. 
+
+x <- factor(c("a", "b", "c"))
+x
+class(x) # "factor"
+levels(x) # [1] "a" "b" "c"
+
+# cannot assign values that are not in the levels
+x[2] <- "c"
+x[2] <- "d"
+# Warning message:
+#In `[<-.factor`(`*tmp*`, 2, value = "d") :
+#  invalid factor level, NA generated
+
+#  Nor can we combine factors
+c(factor("a"), factor("b")) # [1] 1 1
+
+# use a factor instead of a character vector 
+# makes it obvious when some groups contains no obs
+
+sex_chr <- c("m", "m", "m")
+sex_factor <- factor(sex_chr, levels = c("m", "f"))
+
+table(sex_chr)
+# sex_chr
+# m 
+# 3 
+
+table(sex_factor)
+# sex_factor
+# m f 
+# 3 0 
+
+# while factors look like charactor vectors
+# they are actually integers. 
+# so coerce the factor to charactor vectors
+# if need string - like behavior
 
 
 

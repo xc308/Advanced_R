@@ -1,14 +1,14 @@
-################
 # Advanced R #
-##############
+# Hadley Wickham #
 
-##---------------------------##
+
+#***************************#
 # Chapter 2 Data Structures #
-##--------------------------##
+#***************************#
 
-#------------#
+#=============#
 # 2.1 Vectors 
-#------------#
+#=============#
 # the basic data str
 # two flavors: atomic vector, list
 # have 3 common properties
@@ -25,8 +25,9 @@ is.list()
 
 
 
+#-----------------------#
 ## 2.1.1 Atomic Vectors ##
-
+#-----------------------#
 # 4 different types of atomic vectors
 # logical, integer, double (numeric), character
 
@@ -83,7 +84,9 @@ mean(X) # [1] 0.25
 as.numeric(X) # [1] 0 0 0 1
 
 
+#---------------#
 ## 2.1.2 Lists ##
+#---------------#
 # lists are different types of elements, including lists
 # construct lists using list()
 
@@ -120,9 +123,9 @@ mod <- lm(mpg ~ wt, data = mtcars)
 is.list(mod) # [1] TRUE
 
 
-#---------------#
+#================#
 # 2.2 Attributes 
-#---------------#
+#================#
 # attributes can be thought of as a named list (unique names)
 # can be accessed individually with attr()
 # or all at once (as one list) with attributes()
@@ -264,14 +267,17 @@ table(sex_factor)
 # if need string - like behavior
 
 
-#------------------------#
+#========================#
 # 2.3 Matrices and Arrays
-#------------------------#
+#========================#
 
 # Adding a dim() to an atomic vector allows
 # it to behave like a multi - dimensional array
 # A special case of the array is the matrix
 # which has two dim
+
+
+
 
 # matrix 
 a <- matrix(1:6, nrow= 2, ncol = 3)
@@ -317,6 +323,110 @@ str(matrix(1:3, nrow = 1)) # row vector
 
 str(array(1:3, 3)) # 1-d array
 # int [1:3(1d)] 1 2 3
+
+
+
+#================#
+# 2.4 Data Frame
+#================#
+
+# A data frame is a list of equal length vecotrs. 
+# this makes it 2-d structure
+# so share the properties of both the matrix, and list
+
+# The Length of the dataframe is the length of the underlyig list
+# which is the # of elements (i.e. vectors) in the list consisting the matrix
+# which is the same as ncol(matrix)
+
+
+## 2.4.1 Creation ##
+# use data.frame()
+# use named (equal length) vectors as input
+
+DF <- data.frame(x = 1:3, y = c("a", "c", "c"),
+           z = c(T, T, F))
+
+str(DF)
+# 'data.frame':	3 obs. of  3 variables:
+#$ x: int  1 2 3
+#$ y: Factor w/ 2 levels "a","c": 1 2 2
+#$ z: logi  TRUE TRUE FALSE
+
+# NOTE: data.frame defaultly turns string into factors
+# so use stringAsFactors = FALSE to suppress this 
+
+DF_2 <- data.frame(M = c("Mk", "BRs"), 
+              G = c("GV", "Sk"),
+              Z = c(T, T),
+              stringsAsFactors = FALSE)
+
+str(DF_2)  # now two variables are charactors
+# 'data.frame':	2 obs. of  3 variables:
+# $ M: chr  "Mk" "BRs"
+# $ G: chr  "GV" "Sk"
+# $ Z: logi  TRUE TRUE
+
+
+#-----------------------------#
+## 2.4.2 Testing and coercion #
+#-----------------------------#
+
+# As data.frame is a S3 class,
+# its type reflects the underlying vectors used to build it, i.e. list
+# note: a data.frame is list of named equal length vectors
+
+typeof(DF) 
+# [1] "list"
+
+class(DF) # to check if obj DF is a data.frame
+# [1] "data.frame"
+
+is.data.frame(DF) # test explicitly
+# [1] TRUE
+
+## To coerce an object to a data.frame use
+as.data.frame()
+
+### if the object is a vector, 
+    ## then coerce to a one-column data frame
+
+### if the object is a list,
+    ## then coerce one column for each element
+    ## but will get error message if not at the same length
+
+### if the object is a matrix,
+    ## then create a dataframe the the dim of matrix
+
+
+
+#-----------------------------#
+# 2.4.3 Combining data frames
+#-----------------------------#
+# use cbind() or rowbind()
+DF_3 <- cbind(DF_2, data.frame(H = c(2.3, 4.5)))
+str(DF_3)
+rbind(DF_3, data.frame(M = "Y", G = "Y", Z = T, H = 9))
+
+# NOTE: cbind() vectors won't create a data.frame
+# as cbind() will only do so when one of the argument has
+# already been a data.frame
+
+# so use data.frame(vector1, vector2) directly
+
+good_df <- data.frame(a = 1:3, b = c(T, T, F),
+           c = c("a", "b", "c"), 
+           stringsAsFactors = FALSE)
+good_df
+str(good_df)
+# 'data.frame':	3 obs. of  3 variables:
+# $ a: int  1 2 3
+# $ b: logi  TRUE TRUE FALSE
+# $ c: chr  "a" "b" "c"
+
+
+
+
+
 
 
 

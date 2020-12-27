@@ -424,6 +424,84 @@ str(good_df)
 # $ c: chr  "a" "b" "c"
 
 
+#----------------------#
+# 2.4.4 Special Columns
+#----------------------#
+
+# since data frame is a list of vectors, 
+# it's possible for it to have a colum that is also a list itself
+df <- data.frame(x = 1:3)
+df$y <- list(1:2, 1:3, 1:4)
+rownames(df) <- c("R1", "R2", "R3")
+df
+#    x          y
+# R1 1       1, 2
+# R2 2    1, 2, 3
+# R3 3 1, 2, 3, 4
+
+# But, if a list is directly given into a data.frame
+# it will coerce follows the rule of put each element of the list in one column
+# so fails:
+data.frame(x = 1:3, y = list(1:2, 1:3, 1:4))
+# Error in : 
+# arguments imply differing number of rows: 2, 3, 4
+
+# A workaround is to use I(),
+# which treats each element of the list as a unit
+df_l <- data.frame(x = 1:3, y = I(list(1:2, 1:3, 1:4)))
+df_l
+str(df_l)
+# 'data.frame':	3 obs. of  2 variables:
+# $ x: int  1 2 3
+# $ y:List of 3
+# ..$ : int  1 2
+# ..$ : int  1 2 3
+# ..$ : int  1 2 3 4
+# ..- attr(*, "class")= chr "AsIs"
+## Note: I() adds a new class to its input, AsIs
+
+df_l$y
+# [[1]] # y is a list, extract it 1st element [[1]]
+# [1] 1 2
+
+#[[2]] # extract its 2nd element
+# [1] 1 2 3
+
+# [[3]]
+# [1] 1 2 3 4
+
+df_l$x
+
+df_l[2, "y"]
+df_l[2, "x"]
+
+# Al so, it's possible to have a column of dataframe
+# that's matrix or array, as long as the number of rows match the df
+df_m <- data.frame(x = 1:3, y = I(matrix(1:9, nrow = 3)))
+str(df_m)
+df_m
+#   x y.1 y.2 y.3
+# 1 1   1   4   7
+# 2 2   2   5   8
+# 3 3   3   6   9
+
+
+df_m2 <- data.frame(x = 1:3, y = I(matrix(1:9, nrow = 3, byrow = TRUE)))
+str(df_m2)
+df_m2
+#   x y.1 y.2 y.3
+# 1 1   1   2   3
+# 2 2   4   5   6
+# 3 3   7   8   9
+
+df_m[2, "y"]
+#       [,1] [,2] [,3]
+# [1,]    2    5    8
+
+
+# Note: many functions that work with data.frame 
+# assume each colum of df is atomic vector.
+
 
 
 

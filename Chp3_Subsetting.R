@@ -325,3 +325,291 @@ str(L)
 
 
 
+# ===============#
+# 3.4 Application
+#================# 
+
+#--------------------#
+# 3.4.1 lookup tables
+#---------------------#
+# or character matching or subsetting
+x <- c("m", "f", "u", "f", 'm')
+lookup <- c(m = "Male", f = "Female", u = "Unkown")
+lookup[x]
+
+unname(lookup[x])
+
+#----------------------------------#
+# 3.4.2 Matching and merging by hand
+#----------------------------------#
+grades <- c(1, 2, 3, 2, 1)
+info <- data.frame(
+  grades = 3:1,
+  descrp = c("Excellent", "Good", "Poor"),
+  fail = c(F, F, T)
+)
+head(info, 2)
+
+# want to corresponding infor for each value of grades
+# two ways to do this:
+  # match() and integer subsetting
+  # rownames() and character subseeting
+
+
+# match()
+id <- match(grades, info$grades)
+# returns a vector of postition the 1st argument match the 2nd argument table
+info[id, ]
+
+# rownames()
+head(info, 2)
+
+rownames(info) <- info$grades
+head(info, 2)
+info[as.character(grades), ]
+
+
+#--------------------------------#
+# 3.4.3 Random Smaples/bootstrap 
+# (integer subsetting)
+#--------------------------------#
+rep(1:3, each = 2)
+# [1] 1 1 2 2 3 3
+
+df <- data.frame(x = rep(1:3, each = 2),
+           y = 6:1, z = letters[1:6])
+
+df
+
+
+sample(nrow(df)) # get a vector of indices
+
+# subset the indices to access the values
+set.seed(28-12-2020)
+df[sample(nrow(df)), ]
+
+# select 3 row randomly
+df[sample(nrow(df), 3), ]
+
+
+# select 6 bootstrap relicates (equivalent to with replacement sampling)
+df[sample(nrow(df), 6, replace = TRUE), ]
+#     x y z
+# 5   3 2 e
+# 3   2 4 c
+# 6   3 1 f
+# 6.1 3 1 f
+# 5.1 3 2 e
+# 1   1 6 a
+# sample() what, how many, and with/without replacement
+
+
+#----------------------#
+# 3.4.4 Ordering 
+# (interger subsetting)
+#----------------------#
+# order()takes a vector as input, 
+# returns an integer vector indicating how the input should be ordered
+P <- c("c", "x", "l", "a")
+order(P) # [1] 4 1 3 2
+P[order(P)]
+# [1] "a" "c" "l" "x"
+
+# additional variable to order()
+  # ascending / descending = TRUE
+
+# any missing value will be put at the end
+# can remove them by na.last = NA or 
+# PUT the NA AT THE FIRST na.last = FALSE
+
+order(c(NA, "c", "x", "l", "a"))
+# [1] 5 2 4 3 1
+
+# remove NA
+order(c(NA, "c", "x", "l", "a"), na.last = NA)
+#[1] 5 2 4 3
+
+# NA put at the first
+order(c(NA, "c", "x", "l", "a"), na.last = FALSE)
+# [1] 1 5 2 4 3
+
+
+## For two or more dimensio, 
+# order() and integer subsetting makes it easy
+# to subset either the rows/columns of an object
+
+# reorder rows by sample & reoder colum
+df2 <- df[sample(nrow(df)), 3:1]
+df2
+#   z y x
+# 5 e 2 3
+# 2 b 5 1
+# 1 a 6 1
+# 3 c 4 2
+# 4 d 3 2
+# 6 f 1 3
+
+# reorder rows
+df2[order(df2$x), ]
+
+# reorder cols
+df2[, order(colnames(df2))]
+
+
+#----------------------------#
+# Expanding aggregated counts
+# (integer subsetting)
+#----------------------------#
+# sometimes data frame's duplicated rows 
+# have been collapsed into one
+# and a count column has been added
+
+# use rep() to uncollapse and integer repeated subsetting
+
+
+df <- data.frame(x = c(2, 4, 1), y = 3:1, n = c(3, 5, 2))
+df
+rep(1:nrow(df), df$n)
+df[rep(1:nrow(df), df$n), ]
+
+
+#---------------------------------------#
+# 3.4.6 Removing columns from data frame
+# (chr subsetting)
+#---------------------------------------#
+# Two ways:
+  # set individual col to be NULL
+  # only subset the ones you want
+
+df <- data.frame(x = 1:3, y = 2:4, z = LETTERS[1:3])
+df
+df$z <- NULL
+df
+
+df[c("x", "y")]
+
+# if know the name of col don't want 
+# jsut use the setdiff to work out which column to keep
+setdiff(colnames(df), "z")
+# [1] "x" "y"
+
+# col subset is chr subset
+df[setdiff(colnames(df), "z")]
+
+
+#------------------------------------------#
+# 3.4.7 Selceting rows based on a condition
+# (logical subsetting)
+#-------------------------------------------# 
+head(mtcars, 2)
+range(mtcars$mpg)
+
+mtcars[mtcars$mpg > 20 & mtcars$gear > 5, ]
+
+# subset() a shorthand for subsetting df
+subset(mtcars, gear == 5)
+
+
+
+#-----------------------------------------#
+# 3.4.8 Boolean algebra vs sets operations
+#-----------------------------------------#
+x <- sample(10) < 4
+x
+# [1] FALSE FALSE FALSE  TRUE FALSE
+# [6] FALSE  TRUE FALSE FALSE  TRUE
+which(x) 
+# convert logi to integer
+# return true
+# return the integer postion of boolean true
+# [1]  4  7 10 these postion are true
+
+# unwhich
+unwhich <- function(x, n){
+  out <- rep_len(FALSE, n)
+  out[x] <- TRUE
+  out
+}
+
+
+# rep_len(FALSE, 10)[x] # x is logi 0000100001
+# got [1] FALSE FALSE FALSE
+
+
+unwhich(which(x), 10)
+#  [1] FALSE FALSE FALSE  TRUE FALSE
+#  [6] FALSE  TRUE FALSE FALSE  TRUE
+
+
+
+## create two logi vectors and their integer equivalents
+
+# Logi
+(x1 <- 1:10 %% 2 == 0)
+# [1] FALSE  TRUE FALSE  TRUE FALSE
+# [6]  TRUE FALSE  TRUE FALSE  TRUE
+
+# integer equvalents
+(x2 <- which(x1))
+# [1]  2  4  6  8 10
+
+# logi
+(y1 <- 1:10 %% 5 == 0)
+#  [1] FALSE FALSE FALSE FALSE  TRUE
+#  [6] FALSE FALSE FALSE FALSE  TRUE
+
+# integer equvalents
+(y2 <- which(y1))
+# [1]  5 10
+
+
+## Relationship betw logi and integer equivalents
+
+# x & y  is the same as intersect(x, y)
+x1 & y1
+# [1] FALSE FALSE FALSE FALSE FALSE
+# [6] FALSE FALSE FALSE FALSE  TRUE
+intersect(x2, y2)
+# [1] 10
+
+
+# x | y is the same as union(x, y)
+x1 | y1
+# [1] FALSE  TRUE FALSE  TRUE  TRUE
+# [6]  TRUE FALSE  TRUE FALSE  TRUE
+
+union(x2, y2)
+# [1]  2  4  6  8 10  5
+
+
+# x & !y is the same as setdiff(x, y)
+x1 & !y1
+# [1] FALSE  TRUE FALSE  TRUE FALSE
+# [6]  TRUE FALSE  TRUE FALSE FALSE
+
+setdiff(x2, y2)
+# [1] 2 4 6 8
+
+
+# xor(x, y) is the same as setdiff(union(x, y), intersect(x, y))
+xor(x1, y1)
+# [1] FALSE  TRUE FALSE  TRUE  TRUE
+# [6]  TRUE FALSE  TRUE FALSE FALSE
+
+setdiff(union(x2, y2), intersect(x2, y2))
+# [1] 2 4 6 8 5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

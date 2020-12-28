@@ -150,5 +150,178 @@ vals[sel]
 # if it's 3, then subset a 3-d array
 
 
+#-------------------#
+# 3.1.4 Data Frames
+#-------------------#
+
+# As data frames possess the characteriscs of 
+# both lists and matrices
+# so:
+  # if subset wiht a single vector, 
+    # df acts like a list
+
+  # if subset with two vectors
+    # df acts like a matrices
+
+df <- data.frame(x = 1:3, y = 3:1, z = letters[1:3])
+df
+
+## selecting rows of a df
+df[df$x == 2, ]
+df[c(1, 3), ]
+
+## selecting cols from a df, two ways
+  ## selecting like a list
+df[c("x", "z")]
+#   x z
+# 1 1 a
+# 2 2 b
+# 3 3 c
+
+  ## selecting like matrix
+df[, c("x", "z")]
+#   x z
+# 1 1 a
+# 2 2 b
+# 3 3 c
+
+## NOTE: when selecting a single column
+# there's an important difference:
+  # selecting like a matrix, 
+    # the result is simplified to a vector by defalut
+  # selecting like a list,
+    # the result keeps the df structure
+
+# like a list
+str(df["x"])
+# 'data.frame':	3 obs. of  1 variable:
+# $ x: int  1 2 3
+
+
+# like a matrix
+str(df[, "x"])
+#  int [1:3] 1 2 3
+
+
+#-=========================#
+# 3.2 Subsetting operators
+#==========================#
+# x is a list
+# x[3:5]: only returns a sub list of x
+# x[[2]]: returns the value in the 2nd list of x
+
+L <- list(a = 1, b = 2)
+L[1]
+# $a
+#[1] 1
+
+L[[1]]
+# [1] 1
+
+L[["b"]] # [1] 2
+
+
+LR <- list(a = list(b = list(c = list(d = 1))))
+
+# supply with a vector, it indexes recursively
+LR[[c("a", "b", "c", "d")]]
+# the same as
+LR[["a"]][["b"]][["c"]][["d"]]
+# [1] 1
+
+
+# as df are lists of columns, can use [[ ]] to 
+# extract a column from df
+mtcars[[1]]
+head(mtcars, 2)
+mtcars[["mpg"]]
+
+
+#-----------#
+# 3.2.2 $
+#-----------#
+
+# $ is shorthand operator for [[ ]]combined wiht character subset
+# x$y is equivalent to x[["y", exact = FALSE]]
+# means $ does partial matching
+
+x <- list(abc = 1)
+x$a # [1] 1
+x[["a"]] # NULL
+
+
+
+#-----------------------------#
+# 3.2.3 Out of bounds indices
+#-----------------------------#
+# OOB
+
+
+#-------------------------------#
+# 3.3 Subsetting and assignment
+#-------------------------------#
+# subsetting combined with assignment to modify
+# selected values of the input vector
+
+x <- 1:5
+x[c(1, 3)] <- 100:101
+x
+
+# length of both sides shall match
+x[-1] <- 4:1
+x
+
+# cannot combine integer indices with NA
+x[c(1, NA)] <- c(1, 2)
+# NAs are not allowed in subscripted assignments
+
+
+# but can combine with logi indices with NA
+# where they are treated as FALSE
+x[c(T, F, NA)] <- 1000 # recycled
+
+
+
+# most useful when conditionally modifying vectors
+df <- data.frame(a = c(1, 10, NA))
+df$a[df$a < 5] <- 0
+df$a # [1]  0 10 NA simplify to vector
+df["a"]
+#    a
+# 1  0
+# 2 10
+# 3 NA
+# preserving the data frame structure
+
+
+## Subseting nothig + assignment preserve the original object class
+
+# length(mtcars) # [1] 11
+mtcars[] <- lapply(mtcars, as.integer)
+# preserve str of mtcars
+str(mtcars) 
+# 'data.frame':	32 obs. of  11 variables:
+
+mtcars2 <- lapply(mtcars, as.integer)
+str(mtcars2) 
+# List of 11
+
+
+## To remove a component of a list
+# use [[]] + assignment + NULL
+L <- list(a = 1, b = 2)
+L[["b"]] <- NULL
+L
+# $ $a
+# [1] 1
+
+## to add a NULL sublist to a list
+# use [] + assignment + list(NULL)
+L["c"] <- list(NULL)
+str(L)
+# List of 2
+# $ a: num 1
+# $ c: NULL
+
 
 

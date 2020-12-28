@@ -599,17 +599,23 @@ xor(x1, y1)
 setdiff(union(x2, y2), intersect(x2, y2))
 # [1] 2 4 6 8 5
 
+with()
+
+sign()
+
+? ceiling()
+floor()
 
 
+ISOdatetime()
+strftime()
+julian()
 
 
+GREP
 
+rcond()
 
-
-
-
-
-
-
+citation(package = "base", lib.loc = NULL, auto = NULL)
 
 

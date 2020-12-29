@@ -92,6 +92,190 @@ x <- list(1:3, 4:9, 10:12)
 sapply(x, "[", 2) # [1]  2  5 11
 
 
+#=======================#
+# 6.4 Function arguments
+#=======================#
+
+#------------------------#
+# 6.4.1 Calling functions
+#------------------------#
+# when calling a function, can specify arguments
+# by postion, by complete names, by partial names
+# arg are matched first by exact names (perfect matching)
+# then by prefix matching, and last by postion
+
+f <- function(abcdef, bcde1, bcde2){
+  list(a = abcdef, b1 = bcde1, b2 = bcde2)
+}
+
+
+# by postion
+f(1, 2, 3)
+# $a
+# [1] 1
+
+# $b1
+# [1] 2
+
+# $b2
+# [1] 3
+
+
+# by perfect match then by postion
+f(2, 3, abcdef = 1)
+# $a
+# [1] 1
+
+# $b1
+# [1] 2
+
+# $b2
+# [1] 3
+
+
+# by partial match and then by position
+f(2, 3, a = 1)
+# $a
+# [1] 1
+
+# $b1
+# [1] 2
+
+# $b2
+# [1] 3
+
+## good calls
+mean(1:10) # argument is a vector
+
+## bad calls
+mean(x = 1:10)
+View(mean)
+
+(mean)
+
+
+
+#--------------------------------------------------#
+# 6.4.2 Calling a function given a list of argments
+#--------------------------------------------------#
+
+# had a list of arguments
+arguments <- list(1:10, na.rm = TRUE)
+
+# how to pass a list of arg into mean fuction?
+# need do.call
+do.call(mean, arguments) # [1] 5.5
+
+
+
+#------------------------------------#
+# 6.4.3 Defalut and missing arguments
+#------------------------------------#
+
+# default
+f <- function(a = 1, b = 2){
+  c(a, b)
+}
+f()
+# [1] 1 2
+str(f)
+
+
+## the default values can be defined in terms of 
+# other arg
+g <- function(a = 1, b = a * 2){
+  c(a, b)
+}
+g(10, 20)
+
+
+
+#-----------------------#
+# 6.4.4 Lazy Evaluation
+#-----------------------#
+
+# function arg are lazy - they're only evaluated
+# if they are acturally used. 
+
+add_fun <- function(x){
+  function(y) x + y
+}
+adders <- lapply(1:10, add_fun)
+adders[[1]](10) # [1] 11 # x = 1, y = 10
+adders[[10]](10) # [1] 20 # x = 10, y = 10
+
+
+## Laziness is useful in if statement
+# the 2nd statement will be evaluated only if the 1st is true
+# if the 1st is not true, the statement would return an error
+# NULL > 0 is a logical vector of length 0 so not a valid input of if 
+
+
+## if (condition)
+# condition: a length-one logical vecotr that is not NA
+
+a <- NULL
+if(is.null(a)) stop("a is null")
+
+
+
+View(plot.default)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

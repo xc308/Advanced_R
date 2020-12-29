@@ -218,15 +218,76 @@ a <- NULL
 if(is.null(a)) stop("a is null")
 
 
-
 View(plot.default)
 
 
+#===================#
+# 6.5 Special Calls #
+#===================#
+
+# two additional syntaxes for calling special 
+# types of functions:
+  # infix function
+  # replacement function
 
 
+#----------------------#
+# 6.5.1 infix functions
+#----------------------#
+
+# most functions are prefix operators:
+  # the name of the function goes ahead of the arg
+
+# infix functions can be created
+  # the function names come in between the agrs
+  # e.g. +, -, 
+
+# if self-create the infix function
+  # must start and end with %
+
+# predefined infix functions:
+  # %% indicates x mod y (“x modulo y”)
+  # %/% indicates integer division
+  # %*% matrix product
+  # %in% logical match
+  # %o% outer product of arrays
+  # %x% kronecker products on arrays
 
 
+# create a new infix function that paste strings together
+'%+%' <- function(a, b){
+  #if(!is.character(a)) return("a must be a string!")
+  #if(!is.character(b)) return("b musth be a string!")
+  if(!is.character(a) & !is.character(b)) 
+    return("a and b must be string!")
+  paste0(a, b)
+} 
+  
+3 %+% 4
+"Gav" %+% "in"
 
+'%+%' ('gav', 'in')
+
+
+'%_%' <- function(a, b){
+  if(!is.character(a) & !is.character(b))
+    return("a and b must all be strings!")
+  
+  paste0("(", a, "_", b, ")")
+}
+
+3 %_% 5 # [1] "a and b must all be strings!"
+"a" %_% "b" # [1] "(a_b)"
+"29" %_% "12" %_% "2020" # [1] "((29_12)_2020)"
+
+
+# a useful infix function that
+# when an input is NULL, then use a default vallue
+'%||%' <- function(a, b = 0){
+  if (!is.null(a)) a else b
+}
+
+NULL %||% 0
 
 
 

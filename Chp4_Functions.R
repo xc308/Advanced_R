@@ -387,6 +387,50 @@ is.function(names)
 
 
 
+#==================# 
+# 6.6 Return Values
+# =================#
+
+# The last expression evaluated in a function
+# is the return value, the result of invoking the function
+
+# funtions can return only a single obj, 
+# but can use list to contain any number of objs
+
+
+#----------#
+# On exit 
+#----------#
+in_dir <- function(dir, code){
+  old <- setwd(dir)
+  on.exit(setwd(old))
+  
+  force(code)
+}
+getwd()
+# [1] "/Users/chenxiaoqing/Dropbox/Learn/Advanced_R"
+
+in_dir("~", getwd())
+#  [1] "/Users/chenxiaoqing"
+
+setwd("/Users/chenxiaoqing/Dropbox/Learn/Advanced_R")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

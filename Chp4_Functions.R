@@ -290,14 +290,100 @@ View(plot.default)
 NULL %||% 0
 
 
+#----------------------------#
+# 6.5.2 Replacement function
+#----------------------------#
+#replacement function acts like they modify 
+# their arguments in place, 
+# and have special names **<- 
+# they typically have two arguments:
+  # x: a vector or array 
+  # value
+# they must return the modified obj
+
+'replace_second<-' <- function(x, value){
+  x[2] <- value
+  x
+}
+
+x <- 1:10
+replace_second(x) <- 5L 
+x
 
 
+'replace_main_diag<-' <- function(x, value){
+  x[1, 1] <- value
+  x[2, 2] <- value
+  x
+}
+x <- matrix(runif(4), nrow = 2 )
+replace_main_diag(x) <- 100L
+x
+#             [,1]        [,2]
+# [1,] 100.0000000   0.7532425
+# [2,]   0.7061591 100.0000000
 
 
+## can use pryr::address() to find the memory address
+# of the underlying obj
+
+install.packages("pryr")
+library(pryr)
+
+x <- 1:10
+address(x) # [1] "0x7fc417bf5460"
+
+replace_second(x) <- 5L
+address(x) # "0x7fc41acfad68"
+
+# so the replacement act like modify in place
+# but actually they create a modified copy
 
 
+# But build-in functions that are implemented using
+# premitive() will just modify directly in place
+
+x <- 1:10 
+address(x) # [1] "0x7fc415051c08"
+
+x[2] <- 6L
+address(x)
 
 
+## supply additional arg
+'modify<-' <- function(x, position, value){
+  x[position] <- value
+  x
+}
+x <- 1:10
+modify(x, 10) <- 100L
+x
+# [1]   1   2   3   4   5   6   7
+# [8]   8   9 100
+
+
+## useful to combine replacement and subsetting
+x <- c(a = 1, b = 2, c = 3)
+names(x)
+names(x)[2] <- "Two"
+names(x) # [1] "a"   "Two" "c" 
+
+# this works is because
+'*temp*' <- names(x)
+'*temp*'[2] <- 'Two'
+names(x) <- '*temp*'
+
+# it creates a local variable named '*temp*'
+# and is removed afterwards
+
+# to find a list of replacement function is base package
+library(help = "base")
+
+
+# is.function Is an Object of Type (Primitive) Function?
+
+is.function(names)
+# [1] TRUE
 
 
 

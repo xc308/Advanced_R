@@ -254,6 +254,187 @@ f(structure(list(), class = "c"))
 
 
 
+#========#
+# 7.3 S4 #
+#========#
+
+# S4 works in a similar way to S3, but adds formality and rigour
+# Methods still belong to function not classes
+# but:
+  # classes have formal definition which describes their fields and hinheritance structures(parent classes)
+  # method dispatch can be based on mulitple arg to a generic function, not just one. 
+  # a special operator, @, for extracting slots(fields) from an S4 obj
+
+
+
+#---------------------------#
+# 7.3.1 Recognising objects, 
+# generic functions, methods
+#----------------------------#
+# identify S4 obj, str() decribes it as a "formal" class
+# isS4() returns TRUE
+# pryr::otype()
+
+
+# identigy S4 generics and methods are easy as they are S4 obj with well defined classes
+
+# There aren't any S4 classes in the commonly used base package
+# (stats, grpahics, utils, datasets, base)
+
+# we start by creating an S4 classes and methods associated with mle
+
+install.packages("stats4")
+library(stats4)
+
+y <- c(26, 17, 13, 12, 20, 5, 9, 8, 5, 4, 8)
+nLL <- function(lambda) -sum(dpois(y, lambda, log = TRUE))
+fit <- mle(nLL, start = list(lambda = 5), nobs = length(y))
+
+# An S4 obj
+isS4(fit) # [1] TRUE
+otype(fit) # [1] "S4"
+
+# An S4 generic
+isS4(nobs) # [1] TRUE
+ftype(nobs) # [1] "s4"      "generic"
+
+# a list of all S4 generics with
+getGenerics()
+
+# get a list of all S4 classes
+getClasses()
+
+# get a list of all S4 methods
+showMethods()
+
+
+
+#----------------------------------------#
+# 7.3.2 defining classes and creating obj
+#-----------------------------------------#
+
+# to define the class using setClass()
+# to create a new obj with new()
+
+## An S4 class has 3 key properties:
+  # A name: Use UpperCamelCase
+  # A named list of slots (fields), which defines slot names and permitted classes
+  # A string giving the class it inherits from or contains
+
+
+
+# set class Person with slot(fields) "names" and "age"
+setClass("Person", slots = list(name = "character", 
+                                age = "numeric"))
+
+setClass("Employee", slots = list(boss = "Person"),
+         contains = "Person")
+
+alice <- new("Person", name = "Alice", age = 20)
+john <- new("Employee", name = "John", age = 32)
+
+
+# to access slots of S4 obj, use @
+alice@age # [1] 20
+
+john@boss
+# An object of class "Person"
+#Slot "name":
+#  character(0)
+
+#Slot "age":
+#  numeric(0)
+
+
+## if a S4 obj contains (inherits from) an S3 obj class
+# or a base type, it will have a special .Data slot
+# which contains the underlying base type or S3 obj:
+
+setClass("RangedNumeric", contains = "numeric",
+         slots = list(min = "numeric", max = "numeric"))
+
+rn <- new("RangedNumeric", 1:10, min = 1, max = 10)
+
+rn@min
+rn@max
+rn@.Data # has a 1:10 coming from base type
+
+
+#----------------------------------------#
+# 7.3.3 Creating new methods and generics
+#----------------------------------------#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

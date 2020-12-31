@@ -107,7 +107,193 @@ methods(class = "ts")
 getS3method(cbind)
 
 
-## 
+#-----------------------------------------#
+# 7.2.2 Defining classes and creating objs
+#-----------------------------------------#
+
+
+# S3 is a simple and ad hoc system
+# it has no formal definition of a class
+# To make an obj an instance of a class
+# you just take an existing base obj and set the class attributes
+
+# can do this during creation with structure()
+# or after with calss<-()
+
+# creat and assign class in one step
+foo <- structure(list(), class = "foo")
+str(foo)
+#  list()
+# - attr(*, "class")= chr "foo"
+
+# create 1st, then assign class
+foo <- list()
+class(foo) <- "foo"
+str(foo)
+#  list()
+# - attr(*, "class")= chr "foo"
+
+
+## S3 objs are usually built on top of lists, 
+# atomic vectors with attributes
+
+# can also turn functions into S3 objs
+
+# can determine the class of any obj using class(x)
+# and see if an obj inherites from a specific class
+# using inherits(x, "classname")
+
+class(foo) # [1] "foo"
+inherits(foo, "foo") # [1] TRUE
+
+
+# the class of an S3 obj can be a vector, 
+# which describes behavior from most to least specific
+
+class(glm)
+
+# class names lower case and avoid . 
+
+
+## most S3 classes provide a constructor function
+function(x) {
+  if(!is.numeric(x)) stop("x must be numeric!")
+  
+  structure(list(x), class = "foo")
+}
+
+# S3 has no check for correctness
+# so can change the class of existing obj
+head(mtcars, 2)
+
+# create a lm model
+model1 <- lm(log(mpg) ~ log(disp), data = mtcars)
+class(model1) # [1] "lm"
+
+print(model1)
+# Call:
+#lm(formula = log(mpg) ~ log(disp), data = mtcars)
+
+#Coefficients:
+#  (Intercept)    log(disp)  
+#5.3967      -0.4658  
+
+# while you can change the class of a sub
+# but you never should
+
+
+hist(mtcars$mpg) # skewed so log to normality
+hist(log(mtcars$mpg)) 
+hist(mtcars$disp)
+hist(log(mtcars$disp), breaks = 25)
+
+
+#----------------------------------------#
+# 7.2.3 Creating new methods and generics
+#-----------------------------------------#
+# Relationship between generic functions and methods:
+  # For S3 obj
+  # generic function decides which Method to call
+  # and the Method carry out computation
+
+
+# To create a new generic, need to create a function that calls UseMethod()
+# which takes two arg: the name of the generic function
+# and another argement to use for method dispatch
+# if the 2nd arg is omitted, then will dispatch the 1st to the fun
+
+# no need to pass any arg of generic function to UseMethod()
+# 1st add a new generic, create a function that calls UseMethod()
+f <- function(x) UseMethod("f")
+
+# a generic isn't useful without some methods. 
+# To add a method, just create a regular function
+# with the correct (generic.class) name:
+f.a <- function(x) "Classs a"
+
+
+# defining a new class
+a <- structure(list(), class = "a")
+class(a) # [1] "a"
+
+f(a) # [1] "Classs a"
+
+
+# adding a method to an existing generic works
+mean.a <- function(x) "a"
+mean(a) # [1] "a"
+
+
+#-----------------------#
+# 7.2.4 Method Dispatch
+#-----------------------#
+# S3 method dispatch is simle: 
+# UseMethod() creates a vector of function names
+# like paste0("generic", ".", "c(class(x), "default"))
+# and looks for each in turn. 
+
+# create a generic function
+f <- function(x) UseMethod("f")
+
+# add a method (class)
+f.a <- function(x) "Class a"
+
+# add a default method
+f.default <- function(x) "Unknonwn class"
+
+
+f(structure(list(), class = "a"))
+# [1] "Class a"
+
+f(structure(list(), class = c("b", "a")))
+#[1] "Class a"
+# no method for class b, so dispatch method for class a
+
+f(structure(list(), class = "c"))
+# [1] "Unknonwn class"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

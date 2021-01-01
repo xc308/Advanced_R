@@ -203,7 +203,93 @@ where <- function(name, env = parent.frame()) {
     where(name, parent.env(env))
   }
   
+
   
+  
+#==================#
+# 8.3 Function Env
+#=================#  
+# most of the env are created not by using new.env() manually
+# but are created as a consequence of using functions.
+  
+# 4 types of env associated with a function:
+    # enclosing env: where the function was created, every function has one or only one enclosing env
+    # binding env :  binding a function to a name with <- defines a binding env
+    # execution env: created when calling a function; stores variables created during execution
+    # calling env: tells you where the function was called; every excecution env is associated with a calling env
+  
+
+#-------------------------#
+# 8.3.1 Then Enclosing Env 
+#-------------------------#
+  
+# When a function is created, it gains a reference to the env whre it was made
+  # this the enclosing env, and is used for lexical scoping
+  # determine: the enclosing env of a function using environment()
+  
+y <- 1  
+f <- function(x) x + y 
+environment(f)   # find the enclosing envirnment
+# <environment: R_GlobalEnv>
+
+
+#-------------------------#
+# 8.3.2 The Binding Env 
+#-------------------------#
+
+# the difference of enclosing env and binding env
+# is important for package namespaces
+
+# namespaces are implemented using env not the enclosing env
+environment(sd) # enclosing env <environment: namespace:stats>
+where("sd") # binding <environment: package:stats>
+
+
+#----------------------#
+# 8.3.3 Excecution env
+#----------------------#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
   
   
   

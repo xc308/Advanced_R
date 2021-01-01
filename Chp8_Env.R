@@ -250,6 +250,50 @@ where("sd") # binding <environment: package:stats>
 #----------------------#
 
 
+#============================#
+# 8.4 Binding names to values
+#============================#
+# can override the usual rules and use a nmae with seq of character by ''
+':-)' <- "smile" 
+ls()
+
+
+
+# <- creates a varaible in the current env
+# The deep assignment arrow <<-, never creates a variable in the current env
+# instead, modify an existing variable found by walking up the parent env
+
+# also can do deep binding, e.g.
+assign(): name <<- value # is equivalent to 
+assign("name", value, inherits = TRUE)
+
+x <- 0
+f <- function() {
+  x <<- 1
+}
+f()
+x # [1] 1
+
+# Two special binding: delayed binding , active
+
+# delayed binding
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

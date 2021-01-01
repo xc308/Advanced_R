@@ -171,6 +171,69 @@ identical(globalenv(), environment())
 
 
 
+#=======================#
+# 8.2 Recursing over env
+#=======================#
+
+# where() finds the env where the name is defined, 
+# using R's regular scoping rules
+library(pryr)
+x <- 5
+where("x")
+# <environment: R_GlobalEnv>
+
+where("mean")
+# <environment: base>
+
+# where() has two arg:
+  # one: the name (as a string) to look for
+  # two: the env it starts to search, parent.frame() is a good default
+
+where <- function(name, env = parent.frame()) {
+  if (identical(env, emptyenv())) {
+    # empty case
+    stop("Can't find",name, call. = FALSE)
+    
+  } else if (exists(name, envir = env, inherits = FALSE)) {
+    # success case, find in the current env
+    env
+    
+  } else {
+    # recursive case, find in the parent.env of current env
+    where(name, parent.env(env))
+  }
+  
+  
+  
+  
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

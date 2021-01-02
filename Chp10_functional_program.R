@@ -103,6 +103,137 @@ summary_closure <- function(x) {
 }
 
 
+#=========================#
+# 10.2 Anonymous functions
+#=========================#
+
+# if choose not to give a function a name, 
+  # you get anonymous function
+
+lapply(mtcars, function(x) length(unique(x)))
+Filter(function(x) !is.numeric(x), mtcars)
+integrate(function(x) sin(x) ^ 2, 0, pi)
+
+# anonymous functions have formals(), body(), a parent env()
+
+formals(function(x = 4) g(x) + h(x))
+# the list of args: [1] 4
+
+body(function(x = 4) g(x) + h(x))
+# g(x) + h(x)
+
+environment(function(x = 4) g(x) + h(x))
+# <environment: R_GlobalEnv>
+
+# the most common use for anonymous functions
+# is to create closures, functions made by other functions
+
+#===============#
+# 10.3 Closures
+#===============#
+# closures: functions written by functions
+# gets its name as they include the env of the
+# parent function and can access all its varaibles
+# useful as it allows us to have two levels of par:
+  # a parent level that controls the operation
+  # a child level that does the work
+
+
+power <- function(exponent) {
+  function(x) {
+    x ^ exponent
+  }
+}
+
+square <- power(2) # fix parent level to get the def of square function
+cube <- power(3) # fix parent level to get the def of cub fun
+
+# calculate power function
+square(2)
+# [1] 4
+cube(9)
+# [1] 729
+
+
+# To see the value defined in the enclosing env with their value
+library(pryr)
+unenclose(square)
+# function (x) {
+#  x^2
+#}
+
+
+#unenclose(cube)
+
+
+# The parent env of a closure is the execution env
+# of the function that actualy created it
+
+power <- function(exponent) {
+  print(environment())
+  
+  function(x) {
+    x ^ exponent
+  }
+}
+
+zero <- power(0)
+environment(zero)
+# <environment: 0x7f93dde9a0e0>
+
+
+## The execution env normally disappers 
+# after the function returns a value
+
+# but functions capture their enclosing env
+# which means when function a returns function b
+# function b captures and stores the execution env of function a
+# and it does not disappear
+
+
+# In R, almost every function is a closure
+# all functions remember the env in which they were created
+# either global env, if it's a function that you've written
+# or package env, if its a function that someone has written
+
+# only exception is primitive function
+# which call C code directly and don't have associated env
+
+# closures are useful for making function factories
+# and are one way to manage mutable state in R
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

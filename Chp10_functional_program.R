@@ -204,6 +204,34 @@ environment(zero)
 
 
 
+#-----------------------#
+# 10.3.2 Mutable State
+#-----------------------#
+
+i <- 0
+new_counter2 <- function() {
+  i <<- i + 1 # create a variable in parent env, so i < - 0 will be updated
+  i
+}
+new_counter2()
+
+# 1, 2, 3, 4, ....
+
+
+new_counter3 <- function() {
+  i <- 0 # fixed initialization in parent env
+  function() { # an enclosure, got 0 inital every run
+    i <- i + 1
+    i
+  }
+}
+new_counter_three <- new_counter3()
+new_counter_three()
+# 1, 1, 1, ......
+
+
+
+
 
 
 

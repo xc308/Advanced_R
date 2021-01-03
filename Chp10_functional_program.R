@@ -207,6 +207,44 @@ environment(zero)
 #-----------------------#
 # 10.3.2 Mutable State
 #-----------------------#
+# <- always assign in the current env
+# <<- will keep looking up the chain of parent env
+# unitl it finds a matching name
+
+# together, a static parent env and <<- make it 
+# possible to maintain state across function calls
+
+
+#  a counter example
+new_counter <- function() { # creates an env
+  i <- 0 # initialises the counter i in this env
+  
+  function() { # create a new function, which is a closure, 
+    # and its enclosing env is the env when new_counter is run
+    i <<- i + 1
+    i
+  }
+}
+
+# Ordinarary, function execution env are temporaray
+# but a closure maintains access to the env in which it was created
+
+
+counter_one <- new_counter()
+counter_one()
+# [1] 1 
+# [1] 2
+# [1] 3
+# [1] 4
+# [1] 5
+
+# so will always get a "fresh start"
+
+# to get around,
+# since the changes are made in the unchanging parent (or enclosing) env
+# they are preserved across function calls
+
+
 
 i <- 0
 new_counter2 <- function() {
@@ -228,6 +266,28 @@ new_counter3 <- function() {
 new_counter_three <- new_counter3()
 new_counter_three()
 # 1, 1, 1, ......
+
+
+
+#========================#
+# 10.4 Lists of functions
+#=========================#
+# the ability to store functions in a list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

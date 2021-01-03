@@ -273,6 +273,267 @@ new_counter_three()
 # 10.4 Lists of functions
 #=========================#
 # the ability to store functions in a list
+# makes it easier to work with groups of related functions
+# similary, df makes it easier to work with groups of related vectors
+
+# comparing the performance of multiple ways of 
+# computing the mean. 
+# can do by storing each approach (function) in a list:
+
+ls()
+rm("sum")
+
+compute_mean <- list(
+  base = function(x) mean(x), 
+  Sum_over_n = function(x) sum(x) / length(x), 
+  manual = function(x) {
+    total <- 0
+    n <- length(x)
+    for (i in seq_along(x)) {
+      total <- total + x[i] / n
+    }
+    total
+  }
+)
+
+# now call a function from a list
+# simply extract it $, [[ ]] then call it
+x <- runif(1e5, 1, 10)
+system.time(compute_mean$base(x))
+#  user  system elapsed 
+# 0.001   0.000   0.000 
+
+system.time(compute_mean[[2]](x))
+#  user  system elapsed 
+# 0       0       0 
+
+system.time(compute_mean[['manual']](x))
+#   user  system elapsed 
+# 0.010   0.001   0.010 
+
+# can use lapply() to call each funtion 
+# e.g. to see if different methods return the same results
+# but need a calling function
+lapply(compute_mean, function(f) f(x))
+
+call_fun <- function(f, ...) f(...) 
+lapply(compute_mean, call_fun, x)
+
+
+# to time each function,
+lapply(compute_mean, function(f) system.time(f(x)))
+
+# $base
+#user  system elapsed 
+#0       0       0 
+
+#$manual
+#user  system elapsed 
+#0.005   0.000   0.005 
+
+
+
+# Another use of a list of function: 
+# to summarise an obj in mulitple ways
+
+funs <- list(
+  SUM = sum, 
+  MEAN = mean, 
+  MEDIAN = median
+)
+
+x <- 1:10
+lapply(funs, function(f) f(x))
+
+# if want to remove na automatically for all functions
+lapply(funs, function(f) f(x, na.rm = TRUE))
+
+
+
+
+#-------------------------------------#
+# 10.4.1 Moving lists of functions  
+# to the global env
+#-------------------------------------#
+
+
+
+#======================#
+# 10.5 Case study: 
+# numerical integration
+#======================#
+# each step of development of the tool
+# is driven by the desire to reduce duplication
+# and to make the approach more general
+
+
+# idea behind numerical integration:
+  # find the area under a curve by approximating
+  # the curve with simpler components
+  # two simpliest approach: at the midpoint, trapezoid
+
+      # the midpoint rule:
+        # approximates a curve with a rectangle
+      
+      
+      # the trapezoid rule:
+        # approximates a curve with a trapezoid
+  
+  # each takes the function want to integrate, f
+  # and a range of values, from a to b, to integrate over
+
+
+# suppose we want to integrate sinx from 0 to pi
+# A good choic for testing as it has a simple answer 2
+
+midpoint <- function(f, a, b) {
+  (b - a) * f((a + b) / 2)
+}
+
+trapezoid <- function(f, a, b) {
+  (f(a) + f(b)) * (b - a) / 2
+}
+
+midpoint(sin, 0, pi) # [1] 3.141593
+trapezoid(sin, 0, pi) # [1] 1.923671e-16
+
+# but the true is 2, so neither of them is a good approximation
+# using the idea of calculus, break up the range into smaller piece
+# and integrate each piece using one of the simple rules able
+# this is called composition integration
+
+midpoint_composite <- function(f, a, b, n) {
+  points <- seq(a, b, length.out = n + 1)
+  h <- (b - a) / n
+  
+  area <- 0
+  for (i in seq_len(n)) {
+    area <- area  + f((points[i] + points[i + 1]) / 2) * h
+    
+  }
+  area
+}
+
+
+trapezoid_composite <- function(f, a, b, n) {
+  points <- seq(a, b, length.out = n + 1)
+  h <- (b - a) / n
+  
+  area <- 0
+  for (i in seq_len(n)) {
+   area <- area + (f(points[i]) + f(points[i + 1])) * h / 2
+  }
+  area
+}
+
+
+
+midpoint_composite(sin, 0, pi, n = 10)
+# [1] 2.008248
+
+trapezoid_composite(sin, 0, pi, n = 10)
+# [1] 1.983524
+
+
+midpoint_composite(sin, 0, pi, n = 1000)
+# [1] 2.000001
+
+trapezoid_composite(sin, 0, pi, n = 1000)
+# [1] 1.999998
+
+
+## Notice there are lots of duplication between 
+# two composite methods
+# so modify our function in a general rule
+composite <- function(f, a, b, n = 10, rule) {
+  points <- seq(a, b, length.out = n + 1)
+  
+  area <- 0
+  for (i in seq_len(n)) {
+    area <- area + rule(f, points[i], points[i + 1])
+  }
+  
+  area
+}
+
+composite(sin, 0, pi, n = 10, rule = midpoint)
+# [1] 2.008248
+
+composite(sin, 0, pi, n = 10, rule = trapezoid)
+# [1] 1.983524
+
+# the composite function takes two functions as arg
+  # the function to integrate
+  # the funtion of integration rule
+
+
+install.packages("statmod")
+library(statmod)
+
+View(gauss.quad)
+view(gauss.quad)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

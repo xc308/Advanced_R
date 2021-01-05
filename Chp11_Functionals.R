@@ -201,6 +201,65 @@ lapply(names(xs), function(nm) {})
 #-----------------------------------------#
 # 11.2.2 Multiple inputs: Map (and mapply)
 #-----------------------------------------#
+# if want to find a weighted mean
+# of two lists, one is obs, the other is weights
+
+
+# generate some data
+xs <- replicate(5, runif(10), simplify = FALSE)
+ws <- replicate(5, rpois(10, 5) + 1, simplify = FALSE)
+
+unlist(lapply(seq_along(xs), 
+       function(i) weighted.mean(xs[[i]], ws[[i]])))
+
+
+# an cleaner alternative is to use Map, 
+# a variant of lapply(), where all arg can vary
+
+Map()
+# apply function to each element of a vector
+
+unlist(Map(weighted.mean, xs, ws))
+
+# this is equivalent to 
+
+stopifnot(length(xs) == length(ws))
+out <- vector(mode = "list", length = length(xs))
+for (i in seq_along(xs)) {
+  out[[i]] <- weighted.mean(xs[[i]], ws[[i]])
+}
+
+
+# there's a natural equivalence between Map and lapply
+# as it's easy to convert Map to lapply that iterates over
+# indices
+
+# but map is more consice and more clearly indicates
+# what you are trying to do
+
+
+# Map is useful when you have two or more lists (df)
+# to process parallel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

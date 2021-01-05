@@ -1,0 +1,241 @@
+#***************#
+# 11 Functionals
+#***************#
+
+# A higer-order function is a function that
+# takes a function as an input or returns 
+# a function as output. 
+# one type of higher-order function is closure
+  # f unctions returned by another function
+
+# The complement to a closure is a functional
+  # a function that takes a function as an input
+  # and returns a vector as output. 
+
+# the 3 common functionals: 
+  # lapply(), apply(), tapply()
+
+# all 3 take a function as a input, 
+# and return a vector as an output
+
+# common use of functional is an alternative to for loop
+# for loop is very slow in R
+# and not very expressive
+
+
+# functionals will not always produce the fastest code
+# it helps you clearly coummunicatee and build tools
+# that solve a wide range of problems
+# 
+
+
+
+#==================================#
+# 11.1 My first functional:lapply()
+#===================================#
+# lapply() takes a function, applies it to each element in a lsit
+# and returns the result in the form of a list
+
+x <- list(10, "a", 23.8)
+seq_along(x) # [1] 1 2 3
+
+# lapply() is written in C for efficiency perfomance
+# but it can be written in R
+
+lapply2 <- function(x, f, ...) {
+  out <- vector(mode = "list", length = length(x))
+  
+  for (i in seq_along(x)) {
+    out[[i]] <- f(x[[i]], ...)
+  }
+  
+  out
+}
+# 
+vector("list", length = length(x)) 
+# produce a vector, each element is a list
+#[[1]]
+#NULL
+
+#[[2]]
+#NULL
+
+#[[3]]
+#NULL
+
+# so lapply is wraper for a common for loop pattern
+#
+
+set.seed(05-01-2021)
+l <- replicate(20, runif(sample(1:10, 1)), simplify = FALSE)
+# generate a list of 20 different lenght of random uniform numbers
+
+# use for loop
+out <- vector("list", length = length(l))
+for(i in seq_along(l)) {
+  out[[i]] <- length(l[[i]])
+}
+unlist(out)
+# [1]  9  9  7  3  6  3  4  1  5 10
+# [11]  9  3  5  4  1  7  8  6  7  9
+
+
+# use lapply
+unlist(lapply(l, length))
+# apply length function onto each element of a list
+# [1]  9  9  7  3  6  3  4  1  5 10
+# [11]  9  3  5  4  1  7  8  6  7  9
+
+
+# since a df is also a list, so lapply can also
+# be useful when want to deal with each colu of df
+
+unlist(lapply(mtcars, class))
+
+
+# divide each col by mean
+lapply(lapply(mtcars, function(x) x / mean(x)), head)
+
+mtcars[] <- lapply(mtcars, function(x) x / mean(x))
+
+head(mtcars, 3)
+
+mtcars[] <- lapply(mtcars, function(x) x * mean(x))
+head(mtcars, 2)
+
+
+
+# usually, the pieces of x are always the 1st arg of the function
+# if want to use other arg, can use anonymous function
+
+#mean(x, trim)
+# trim: the fraction (0 - 0.5) of obs is trimmed at the end of x
+# before the mean is computed 
+
+set.seed(05-01-2021)
+trims <- c(0, 0.1, 0.2, 0.5)
+x <- rcauchy(1000)
+system.time(lapply(trims, function(trim) mean(x, trim = trim)))
+
+#    user  system elapsed 
+#   0.002   0.000   0.001 
+
+
+
+# use for loop
+trim_mean <- numeric(length = length(trims))
+system.time(for (i in seq_along(trims)) {
+  trim_mean[i] <- mean(x, trim = trims[i])
+  trim_mean
+})
+
+#    user  system elapsed 
+#   0.004   0.000   0.003 
+
+
+#------------------------#
+# 11.1.1 Looping Patterns
+#------------------------#
+# There are three ways to loop over a vector:
+  # loop over the elements: for (x in xs)
+  # loop over the numeric indices: for (i in seq_along(xs))
+  # loop over the names: for (nm in names(xs))
+
+
+# loop over a vector:
+xs <- runif(1e3)
+res <- c()
+system.time(for (x in xs) {
+  res <- c(res, sqrt(x))
+})
+# quite slow, as need to copy all the existing elements
+# of res
+
+
+# loop over numeric indices
+res <- numeric(length(xs)) # create an space for output
+system.time(for (i in seq_along(xs)) {
+  res[i] <- sqrt(xs[i])  # fill it in 
+})
+
+
+
+# similaly, there are three types of ways to use for loop
+lapply(xs, function(x) {})
+lapply(seq_along(xs), function(i) {})
+lapply(names(xs), function(nm) {})
+
+
+# typically, use the first form as lapply takes care for the output for me
+# but if want to know the position or name of the element you are working with
+# you should use the 2nd and 3rd form
+
+
+#===========================#
+# 11.2 for loop functionals: 
+# friends of lapply()
+#==========================#
+# sapply() vapply() produce vectors, matrics, arrays 
+# as output instead of lists
+
+# Map() and mapply() which iterate over multiple input
+# data structures in parallel
+
+# mclapply() and mcMap(), mulit-chain lapply() and Map()
+
+# write a new function, rollapply() to solve a new problem
+
+
+
+#----------------------#
+# 11.2.1 Vector output: 
+# sapply and vapply
+#-----------------------#
+# both simplyfied the output to atomic vector
+
+# sapply() guess
+# vapply() takes additional arg to specify the output type
+
+
+
+#-----------------------------------------#
+# 11.2.2 Multiple inputs: Map (and mapply)
+#-----------------------------------------#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

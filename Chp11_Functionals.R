@@ -242,6 +242,80 @@ for (i in seq_along(xs)) {
 # to process parallel
 
 
+# Map is equivalent to mapply(..., simplify = FALSE)
+
+
+#---------------------------#
+# 11.2.3 Rolling Computation
+#---------------------------#
+trunc(2.5) # 2
+# rolling mean
+
+roll_mean <- function(x, n) {
+  out <- rep(NA, length(x))
+  offsets <- trunc(n / 2)
+  
+  for (i in (offsets + 1) : (length(x) - n + offsets + 1)) {
+    out[i] <- mean(x[(i - offsets) : (i + offsets - 1)])
+  }
+  
+  out
+}
+
+x <- seq(1, 3, length.out = 100) + runif(1e2)
+plot(x)
+lines(roll_mean(x, 5), col = "red")
+lines(roll_mean(x, 10), col = "blue", lwd = 2)
+
+
+# but if the noise was more variable,
+# then the rolling mean was too sensitive to outlieres
+# instead want a rolling median
+set.seed(06-01-2021)
+x <- seq(1, 3, length.out = 1e2) + rt(1e2, df = 2) / 3
+plot(x)
+lines(roll_mean(x, 3), col = "red", lwd = 2)
+
+# so we could just cope able code and change the mean function to median
+# but instead, we would wrap the rolling summary into a function itself
+
+roll_apply <- function(x, n, f, ...) {
+  out <- rep(NA, length(x))
+  offsets <- trunc(n / 2)
+  
+  for (i in (offsets + 1) : (length(x) - n + 1 + offsets)) {
+    out[i] <- f(x[(i - offsets) : (i + offsets - 1)], ...)
+  }
+  
+  out
+}
+
+lines(roll_apply(x, 5, median), col = "blue", lwd = 2)
+
+legend("bottomright", legend = c("mean", "median"),
+       col = c("red", "blue"), lty = 1, bty = "n", cex = 0.5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

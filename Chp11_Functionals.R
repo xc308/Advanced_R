@@ -297,6 +297,220 @@ legend("bottomright", legend = c("mean", "median"),
 
 
 
+#-----------------------#
+# 11.2.4 Parallelisation
+#-----------------------#
+# implementation of lapply is that 
+# each iteration is isolated from all others
+# so the order in which they are computed does not matter
+
+# if scrambels the order of computation, 
+lapply3 <- function(x, f, ...) {
+  out <- vector(mode = "list", length = length(x))
+  
+  for (i in sample(seq_along(x))) {
+    out[[i]] <- f(x[[i]], ...)
+  }
+  
+  out
+}
+
+unlist(lapply3(1:10, sqrt)) - unlist(lapply(1:10, sqrt))
+# [1] 0 0 0 0 0 0 0 0 0 0
+
+# This has a very important consequence:
+# we can compute each element in any order
+# so easy to dispatch tasks to different cores
+# and compute them in parallel. 
+
+# this is what paralle::mclapply()
+# and parallel::mcMap()
+
+
+install.packages("parallel")
+library(parallel)
+
+unlist(mclapply(1:10, sqrt, mc.cores = 4))
+# in the case, mclapply is actually slow
+# as althought individual computation cost is slow
+# the additional work i.e. sent compuation to different cores
+# and to collect the results are demanding
+
+
+# but in a more realistic bootstrap replicates of a linear model
+# mclapply has advanctages 
+
+# define bootstrap function
+boot_df <- function(x) x[sample(nrow(x), replace = T), ]
+rsquared <- function(model) summary(model)$r.square
+boot_lm <- function(new_data) {
+  rsquared(lm(mpg ~ wt + disp, data = boot_df(mtcars)))
+}
+
+# use the fitted model to predict new data
+system.time(lapply(1:500, boot_lm))
+#    user  system elapsed 
+#   0.836   0.023   0.942 
+
+system.time(mclapply(1:500, boot_lm, mc.cores = 4))
+#   user  system elapsed 
+#  0.006   0.010   0.445 
+
+# while increasing the number of cores will not 
+# always lead to linear improvement, switching from 
+# lapply() and Map() to its parallised form can dramatically
+# improve computational performance
+
+
+#x <- matrix(1:8, nrow = 4)
+#sample(nrow(x), replace = T) # sample is to reorder,
+
+
+
+# simulate the performance of a t-test for non-normal data
+trials <- replicate(100, t.test(rpois(10, 10), rpois(7, 10)),
+                    simplify = FALSE)
+
+lapply(trials, head)
+
+# extract the p-value for every trial
+sapply(trials, function(x) x$p.value)
+
+
+
+#===================================#
+# 11.3 Manipulating matrices and df
+#===================================#
+
+# three categories of data structure functionals:
+  # apply(), sweep(), outer() work with matrices
+  # tapply() summerises a vector by groups defined by another vector
+  # the plyr package, which generalises tapply() to make it eay to 
+    # work with df, lists, arrays, as inputs and dfs, lists, or arrays as outputs
+
+
+
+
+#-----------------------------------#
+# 11.3.1 Matrix and array operations
+#-----------------------------------#
+# so far, all functionals work with 1-d input structures
+# the 3 functionals apply() sweep() outer() work with higher dimensionals data structure
+
+  # apply() is a variannt of sapply() works with matrices and arrays
+  # it operate as summarises a matrix or array by 
+  # collapsing each row / col to a single number
+  # has 4 args:
+    # X: matrix or array to summarise
+    # MARGIN: an integer vector giving the dim to sum over
+      # 1 = row, 2 = col
+    # FUN: a summary function
+    # ...: other args that passed into FUN
+
+# typical example
+a <- matrix(1:20, nrow = 5)
+apply(a, 1, mean)
+apply(a, 2, mean)
+
+# but apply doesn't have simplify, so 
+# can't be sure what type of output you'll get
+# so it's not safe to use apply within a function
+# unless you carefully check the inputs
+
+# apply() is not idenpotent in the sense
+# that if the summary function is the indentity operator
+# the output is not always the same as the input
+
+a1 <- apply(a, 1, identity)
+identical(a, a1) # [1] FALSE
+
+
+a2 <- apply(a, 2, identity)
+identical(a, a2) # [1] TRUE
+
+#identity(x) # returning its arg x
+
+
+# sweep 
+  # allows you to sweep out the values of a summaries statisc
+  # often used with apply() to standardise arrays
+  
+
+# example: scale the row of matrix to allow value between 0, 1
+set.seed(06-01-2021)
+
+x <- matrix(rnorm(20, 0, 10), nrow = 4)
+x[1, ]
+x[2, ]
+x1 <- sweep(x, 1, apply(x, 1, min), "-")
+x2 <- sweep(x1, 1, apply(x1, 1, max), "/")
+# apply(x1, 1, max) find the max of each row
+# each element of each row  / max of each to standardise
+
+
+
+# Final matrix functional: outer 
+  # it takes multiple vector inputs
+  # and creates a matrix or array output
+  # where input function is run over every combination of inputs
+
+outer(1:3, 1:10, "*")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

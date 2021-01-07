@@ -522,6 +522,202 @@ tapply2(pulse, group = Group, f = mean)
 # 70.8 74.0 
 
 
+#-------------------------#
+# 11.3.3 The plyr package
+#-------------------------#
+
+# to provide consistently named functions with
+# consistently named arguments and 
+# covers all combinations of input and output data structure
+
+# input   output     calling function 
+# list    list        llply()
+# list    df          ldply()
+# list    array       laply()
+# df      list        dlply()
+# df      df          ddply()
+# df      array       daply()
+# array   list        alply()
+# array   df          adply()
+# array   array       aaply()
+
+# each of the function splits up the input,
+# applies a funtion to each piece and then combine the results
+# the process is called "split-apply-combine"
+
+#=========================#
+# 11.4 Manipulating lists
+#=========================#
+# can also be thought as a set of general tools
+# for altering, subsetting, and collapsing lists
+
+# every funtionals programming language has 3 tools for this
+# Map(), Reduce(), Filter()
+
+# Reduce(): a powerful tool for extending two-arg functions
+# Filter(): a member of an important class of functionals that work
+# with predicates, functions that return a single T or F
+
+
+#------------------#
+# 11.4.1 Reduce()
+#------------------#
+# Reduce() reduces a vector x, to a single value 
+# by recursively calling a function f, two args at a time
+
+
+# it combines the first two elements with f
+# then combines the result of that call with the 3rd element
+# and so on
+
+# calling Reduce(f, 1:3) is equivalent to f(f(1, 2), 3)
+# Reduce also known as fold, as it folds together 
+# adjacent elements in the list
+
+# two examples show what Reduce does with an infix and prefix function:
+Reduce('+', 1:3) # ((1 '+' 2) '+' 3)
+Reduce(sum, 1:3) # (sum(1, 2), 3)
+
+# The essence of Reduce is a for loop
+
+Reduce2 <- function (f, x) {
+  out <- x[[1]]
+  
+  for(i in 2:length(x)){
+    out <- f(out, x[[i]])
+  }
+  
+  out
+}
+
+# Reduce is an elegant way of extending a function that works with only 2 args
+# to a function that can deal with any number of inputs
+
+# so it's useful for implementing many types of recursive operations, e.g. merge, intersections
+
+# example: have a list of numeric vectors
+# want to find the values that occur in every element
+
+l <- replicate(5, sample(1:10, 15, replace = TRUE), 
+          simplify = FALSE )
+
+str(l)
+
+# to find the common value, can use intersect function recursively
+intersect(intersect(intersect(intersect(l[[1]], l[[2]]), l[[3]]), l[[4]]), l[[5]])
+# [1] 7 4 6
+
+# but can use Reduce(), finish in an elegent way
+Reduce(intersect, l)
+# [1] 7 4 6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -663,6 +663,131 @@ Position(is.numeric, df)
 # [1] 1
 
 
+#==============================#
+# 11.5 Mathematical Functionals
+#==============================#
+# Functionals are very common in Maths
+# Limit, max, roots, definite integrals are all functionals
+
+# Functional: take a function as input, and returns a vector as output
+# so they are all functionals as given a function, 
+# they will return a number or a vector of number
+
+
+## 3 functionals that work with functions to return single numeric values
+# integrate(): finds the area under the curve defined by f()
+# uniroot(): finds where f() hits zeros
+# optimise(): finds the location of lowest(highest) value of f
+
+# example: use sin function
+integrate(sin, 0, pi)
+# 2 with absolute error < 2.2e-14
+
+# find the root of sin within the interval pi * c(1 / 2, 3 / 2)
+str(uniroot(sin, pi * c(1 / 2, 3 / 2)))
+# List of 5
+#$ root      : num 3.14
+#$ f.root    : num 1.22e-16
+#$ iter      : int 2
+#$ init.it   : int NA
+#$ estim.prec: num 6.1e-05
+
+str(optimise(sin, c(0, 2 * pi)))
+# List of 2
+#$ minimum  : num 4.71
+#$ objective: num -1
+
+
+str(optimise(sin, c(-pi, pi), maximum = TRUE))
+#List of 2
+#$ maximum  : num 1.57
+#$ objective: num 1
+
+# in statistics, optimisation is often used for MLE
+# which have two sets of parameters:
+  # data: fixed for a given problem
+  # parameters: vary as we try to find the maximum
+
+# these two sets of parameters make the problem well suited for maximum
+# combining closures with optimisation gives rise to the approach to solving MLE 
+
+# The following example shows how to find the mle for lamda
+# if the data is from a poisson distr
+
+# create a function factory that, given a dataset
+# returns a function that computes the negative log likihood (NLL)
+# for parameter lambda
+
+poisson_nll <- function(x) {
+  
+  n <- length(x)
+  sum_x <- sum(x)
+  
+  function(lamda) {
+    n * lamda - sum_x * log(lamda)
+  }
+}
+
+x1 <- rpois(10, 38)
+x1
+x2 <- rpois(12, 7)
+x2
+
+nll_1 <- poisson_nll(x1)
+op_1 <- optimise(nll_1, c(0, 100))
+op_1$minimum # [1] 36.19999 just the mean of data in this case
+
+
+nll_2 <- poisson_nll(x2)
+op_2 <- optimise(nll_2, c(0, 100))
+op_2$minimum # [1] 8.333325
+
+mean(x1) # [1] 36.2
+mean(x2) # [1] 8.333333
+
+
+# optim() generalisation of optimise
+# works with more than one dim
+
+# explore more with Rvmmin package
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

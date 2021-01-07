@@ -612,6 +612,59 @@ Reduce(intersect, l)
 # [1] 7 4 6
 
 
+#-----------------------------#
+# 11.4.2 Predicate functionals
+#-----------------------------#
+# A predicate is a function that returns a single TRUE or FALSE
+# e.g. is.character, all, is.NULL
+
+# A predicate functional applies a predicate to each element of a list or df
+# 3 useful predicates functionals in base R:
+  # Filter(), Find(), Position()
+
+
+# Filter(): select those elements which match the predicate
+# Find(): returns the 1st element which matches the predicate 
+          # or the last one if right = TRUE
+# Position(): returns the postion of the 1st element that matches the predicate
+          # or the last one if right = TRUE
+
+# where(): a custom functional that generates a logical 
+# vector from a list (or df) and a predicate:
+where2 <- function(f, x) {
+  vapply(x, f, logical(length = 1))
+}
+
+
+# use of these functions with df
+df <- data.frame(x = 1:3, y = c("a", "b", "c"))
+where2(is.factor, df)
+#    x     y 
+# FALSE  TRUE 
+
+Filter(is.factor, df) 
+# filter out the elements in list that match the predicate
+str(Filter(is.factor, df))
+# 'data.frame':	3 obs. of  1 variable:
+# $ y: Factor w/ 3 levels "a","b","c": 1 2 3
+
+Find(is.factor, df)
+# [1] a b c
+# Levels: a b c
+
+Find(is.factor, df, right = TRUE)
+# [1] a b c
+# Levels: a b c
+
+Position(is.factor, df)
+# [1] 2
+
+Position(is.numeric, df)
+# [1] 1
+
+
+
+
 
 
 

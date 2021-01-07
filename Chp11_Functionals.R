@@ -458,6 +458,106 @@ outer(1:3, 1:10, "*")
 
 
 
+#-------------------#
+# 11.3.2 Group apply
+#-------------------#
+# tapply() as a generalisation to apply()
+# that allows for "ragged" arrays
+# arrays where each row can have different number of columns
+
+# have pluse rate data from medical trial
+# want to compare two groups
+
+pulse <- round(rnorm(22, mean = 70, sd = 10 / 3)) + 
+  rep(c(0, 5), c(10, 12))
+# base = 70, flunctuation: 0 (10 people) and 5 (12 people)
+Group <- rep(c("A", "B"), c(10, 12))
+
+# tapply() 
+  # 1st create a ragged data structure from a set of inputs
+  # 2nd apply the function to each individual elements of that structure
+
+tapply(pulse, Group, length)
+#  A  B 
+# 10 12 
+
+tapply(pulse, Group, mean)
+#   A    B 
+# 70.8 74.0 
+
+# And the 1st task is actually what split() does
+  # it takes two inputs and returns a list 
+  # which groups elements together from the 1st vector
+  # according to elements, categories, from the 2nd vector
+
+sp_gp <- split(pulse, Group)
+# $A
+#[1] 70 68 78 73 68 69 72 65 70 75
+
+#$B
+#[1] 70 73 84 71 74 75 74 73 69 74
+#[11] 77 74
+
+  # then tapply() is just the combianation of split() and sapply()
+
+
+sapply(sp_gp, length)
+#  A  B 
+# 10 12 
+
+sapply(sp_gp, mean)
+#    A    B 
+#  70.8 74.0 
+
+tapply2 <- function(x, group, f, ..., simplify = TRUE) {
+  pieces <- split(x, group)
+  sapply(pieces, f)
+}
+
+tapply2(pulse, group = Group, f = length)
+#  A  B 
+# 10 12
+tapply2(pulse, group = Group, f = mean)
+#    A    B 
+# 70.8 74.0 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

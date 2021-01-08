@@ -841,6 +841,255 @@ i <- rgeom(1, 0.1)
 
 
 
+#===========================#
+# 11.7 A family of functions
+#===========================#
+# a case study: shows how to use functionals 
+# to take a simple building block and make it powerful
+# and general
+
+
+# start with a simple idea, adding two numbers together
+# use functionals to extend it to summing mulitple numbers 
+# computing parallel and cumulative sums
+# and summing across array dimensions
+
+# define a simple add function
+add2 <- function(x, y) {
+  stopifnot(length(x) == 1, length(y) == 1, 
+            is.numeric(x), is.numeric(y))
+  x + y
+}
+
+
+identity() 
+# A trivial identity function returning its argument.
+
+
+# to make the add2 function be able to deal with NAs
+# write an rm.na helper function:  
+# if x is missing, return y
+# if y is missing, return x
+# if x and y are both missing, then return identity, i.e. the arg itself
+
+rm_na <- function(x, y, identity) {
+  if (is.na(x) && is.na(y)) {
+    identity
+  } else if (is.na(x)) {
+    y
+  } else if (is.na(y)) {
+    x
+  }
+}
+
+# test
+rm_na(NA, NA, 0)
+rm_na(NA, 9, 0)
+rm_na(8, NA, 19)
+rm_na(NA, NA, 10)
+rm_na(NA, NA, "*^-^*")
+
+
+# update add2: a version of dealing with NA
+add2 <- function(x, y, na.rm = FALSE) {
+  if (na.rm && (is.na(x) || is.na(y))) {
+    rm_na(x, y, 0)} else x + y
+}
+
+add2(10, NA)
+# [1] NA
+
+add2(10, NA, na.rm = TRUE)
+# [1] 10
+
+
+## One extension is to make the function
+# be able to deal with more than 2 number inputs
+
+# we can do this by iteratively adding two numbers
+# if input is c(1, 2, 3) then add(add(1, 2), 3)
+# which is a simple application of Reduce()
+
+reduce_add <- function(xs, na.rm = TRUE) {
+  Reduce(function(x, y) add2(x, y, na.rm = na.rm), xs)
+}
+
+# test
+reduce_add(c(1, 3, 5))
+
+# test some specialities
+reduce_add(NA, na.rm = TRUE)
+# [1] NA
+# not right as we've already asked to romove NA
+
+reduce_add(numeric())
+# NULL not right, should get a length one numeric vector
+sum(numeric()) # get a length one numeric vector
+# [1] 0
+
+
+# because Reduce() if given a length zero input, 
+# it always returns NULL
+# easiest way is to use the init arg of Reduce()
+# which is added to the start of every input
+
+reduce_add <- function(xs, na.rm = TRUE) {
+  Reduce(function(x, y) add2(x, y, na.rm = na.rm), xs, init = 0)
+}
+
+# test
+reduce_add(c(9, 3, 1))
+reduce_add(NA, na.rm = TRUE)
+# [1] 0 right!
+reduce_add(numeric())
+# [1] 0
+
+
+## here reduce_add is equivalent to sum
+
+
+# It would be nice to have a vectorised version of add()
+# so we can perform addition of two vectors of numbers in element-wise fashion
+# we could use Map() or vapply() to implement this, but neither is perfect
+  # Map() returns a list, so need to use simplify2array()
+  # vapply() returns a vector but requires to loop over a set of indices
+
+v_add1 <- function(x, y, na.rm = FALSE) {
+  stopifnot(length(x) == length(y), 
+            is.numeric(x), is.numeric(y))
+  
+  if(length(x) == 0) return(numeric())
+  
+  simplify2array(Map(function(x, y) add2(x, y, na.rm = na.rm), x, y))
+
+}
+
+
+v_add2 <- function(x, y, na.rm = FALSE) {
+  stopifnot(length(x) == length(y), 
+            is.numeric(x), is.numeric(y))
+  
+  if(length(x) == 0) return(numeric())
+  
+  vapply(seq_along(x), function(i) add2(x[i], y[i], na.rm = na.rm),
+         numeric(length = 1))
+}
+
+# test
+v_add1(1:10, 2:11)
+# [1]  3  5  7  9 11 13 15 17 19 21
+
+v_add1(numeric(), numeric())
+# numeric(0)
+
+v_add1(c(1, NA), c(1, NA))
+# [1]  2 NA
+
+v_add1(c(1, NA), c(1, NA), na.rm = TRUE)
+# [1] 2 0
+
+
+# finally, we to deine addition for more complicated data
+# sturcture like matrices. 
+# could sum across over rows or cols or any arbitrary set of dimensions
+
+row_sum <- function(X, na.rm = FALSE) {
+  apply(X, 1, add2, na.rm = na.rm)
+}
+
+col_sum <- function(X, na.rm = FALSE) {
+  apply(X, 2, add2, na.rm = na.rm)
+}
+
+array_sum <- function(X, na.rm = FALSE) {
+  apply(X, dim, add2, na.rm = na.rm)
+}
+
+
+# the rol_sum = rowSums(), col_sum = colSums()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

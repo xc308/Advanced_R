@@ -823,6 +823,30 @@ exp_sm(x, 0.5)[1:10]
 # the input and ouput at the postion i-1
 
 
+#-------------------#
+# 11.6.3 While loop
+#-------------------#
+# while loop keeps running unitl condition is met
+
+while(TRUE) {
+  i <- 0
+  
+  if(runif(1) >= 0.9) break
+  i <- i + 1 # add count of failer until p >= 0.9 succes
+  
+}
+# essentially a geometric rdv, so could 
+# replace 
+i <- rgeom(1, 0.1)
+
+
+
+
+
+
+
+
+
 
 
 

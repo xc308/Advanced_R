@@ -752,9 +752,9 @@ mean(x2) # [1] 8.333333
 # explore more with Rvmmin package
 
 
-#=====================================#
-# 11.6 Loops that should be left as is
-#=====================================#
+#==========================================#
+# 11.6 Loops have no equivalent functionals
+#==========================================#
 # some loops have no equivalent functionals
 # three common cases:
   # modifying in place
@@ -783,6 +783,59 @@ trans[[var]]
 
 (mtcars[[var]])
 # x in the function (x)
+
+
+
+#-------------------------------#
+# 11.6.2 Recursive relationships
+#--------------------------------#
+# hard to convert a for loop into a functional
+# when the relationship between elemnts is not indepentd
+# or is defined recursively
+
+# exponential smoothing works by taking a weighted average
+# of the current and previous data points
+
+exp_sm <- function(x, alpha) {
+  s<- numeric(length(x) + 1)
+  
+  for(i in seq_along(s)) {
+    if (i == 1) {
+      s[i] <- x[i]
+    } else {
+      s[i] <- alpha * x[i - 1] + (1 - alpha) * s[i - 1]
+    }
+  }
+  
+  s
+}
+
+x <- runif(1e6)
+exp_sm(x, 0.5)[1:10]
+# [1] 0.2732649 0.2732649 0.3365668
+# [4] 0.4003585 0.5436568 0.4506318
+# [7] 0.4109395 0.6806436 0.6207494
+# [10] 0.5019331
+
+
+# can't eliminate for loop as none of the functionals 
+# allow the ouput at the postion i to depend on both 
+# the input and ouput at the postion i-1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

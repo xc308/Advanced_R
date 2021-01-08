@@ -752,6 +752,67 @@ mean(x2) # [1] 8.333333
 # explore more with Rvmmin package
 
 
+#=====================================#
+# 11.6 Loops that should be left as is
+#=====================================#
+# some loops have no equivalent functionals
+# three common cases:
+  # modifying in place
+  # recursive functions
+  # while loops
+
+
+
+#---------------------------#
+# 11.6.1 Modifying in place
+#---------------------------#
+# performs a variable-by-variable transformation
+# by matching the names of a list of functions to 
+# to the names of variables in a data frame
+
+trans <- list(
+  disp = function(x) x * 0.0163871,
+  am = function(x) factor(x, levels = c("auto", "manual")))
+
+for (var in names(trans)) {
+  mtcars[[var]] <- trans[[var]](mtcars[[var]])
+}
+
+trans[[var]]
+# two functions 
+
+(mtcars[[var]])
+# x in the function (x)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

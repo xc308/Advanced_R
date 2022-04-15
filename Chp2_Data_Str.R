@@ -105,7 +105,7 @@ is.recursive(x) #[1] TRUE
 x <- list(list(1, 2), c(3, 4))
 str(x)
 
-y <- c(list(1, 2), c(3, 4)) # first coerce c(3, 4) into a vector
+y <- c(list(1, 2), c(3, 4)) # first coerce c(3, 4) into a list
 str(y)
 
 
@@ -114,6 +114,17 @@ is.list()
 
 # coerce to a list
 as.list()
+
+# turn a list into an atomic vector
+unlist()
+
+# if list has different types, 
+# unlist() uses the same coersion rules of c()
+# coerse to the most flexible type
+x <- list("a", c(2.3, 4.5), F)
+unlist(x)
+# all charactors
+
 
 # lists are used to build up many complicated data structures
 # include data frame, linear model objects
@@ -264,7 +275,7 @@ table(sex_factor)
 # while factors look like charactor vectors
 # they are actually integers. 
 # so coerce the factor to charactor vectors
-# if need string - like behavior
+# if need string-like behavior
 
 
 #========================#

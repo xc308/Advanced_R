@@ -336,6 +336,12 @@ str(array(1:3, 3)) # 1-d array
 # int [1:3(1d)] 1 2 3
 
 
+## dimension attribute can also be set on lists
+## to make list-matrices or list-arrays
+L<- list(1L, T, 3.5, "a")
+dim(L) <- c(2, 2)
+L
+
 
 #================#
 # 2.4 Data Frame

@@ -59,6 +59,17 @@ x[0] # numeric(0)
 y <- setNames(1:3, c("a", "b", "c"))
 y[c("a", "c")]
 
+try <- c(a = 1, b = 2, c = 3)
+identical(try, y) # F
+str(try)
+# Named num [1:3] 1 2 3
+#- attr(*, "names")= chr [1:3] "a" "b" "c"
+
+str(y)
+# Named int [1:3] 1 2 3
+# - attr(*, "names")= chr [1:3] "a" "b" "c"
+
+
 y <- setNames(x, letters[1:4])
 y[c("a", "d")]
 #   a   d 

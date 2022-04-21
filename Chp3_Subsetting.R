@@ -110,6 +110,12 @@ L[[2]]
   # a single vectors
   # a matrix
 
+# the most common way of subsetting matrices (2d) and 
+# arrays (> 2d) is a genralization of 1d subsetting:
+  # supply 1d index for each dimension, seperated by a comma
+  # blank subsetting keeps all rows or all columns
+
+
 
 ## subset with a multiple vector
 a <- matrix(1:9, nrow = 3)
@@ -132,6 +138,7 @@ a[0, -2]
 
 vals <- outer(1:5, 1:5, FUN = "paste", sep = "*.*")
 vals
+str(vals)
 # in column-major order
 # matrix behave like a vector
 vals[c(4, 15)] # subset with a single vector
@@ -139,7 +146,6 @@ vals[c(4, 15)] # subset with a single vector
 # at the postion of 4th and 15th
 
 # "4*.*1" "5*.*3"
-
 
 ## Subset using a matrix
 sel <- matrix(ncol = 2, byrow = TRUE, 
@@ -190,11 +196,12 @@ df[c("x", "z")]
 # 3 3 c
 
   ## selecting like matrix
-df[, c("x", "z")]
+df_sel <- df[, c("x", "z")]
 #   x z
 # 1 1 a
 # 2 2 b
 # 3 3 c
+str(df_sel)
 
 ## NOTE: when selecting a single column
 # there's an important difference:
@@ -212,6 +219,23 @@ str(df["x"])
 # like a matrix
 str(df[, "x"])
 #  int [1:3] 1 2 3
+
+
+#==========================
+# 3.1.5 S3 objs vs S4 objs
+#==========================
+
+# S3 obj are made up with 
+  # atomic vectors
+  # arrays
+  # lists
+  # so can always pull apart S3 obj using techniques above
+
+# S4 obj
+  # needs two additional subsetting operators 
+    # @ == $
+    # slot() == [[ ]]
+
 
 
 #-=========================#

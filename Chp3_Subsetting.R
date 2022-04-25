@@ -314,7 +314,8 @@ x[c(1, NA)] <- c(1, 2)
 # but can combine with logi indices with NA
 # where they are treated as FALSE
 x[c(T, F, NA)] <- 1000 # recycled
-
+x
+# [1] 1000    4    3 1000    1
 
 
 # most useful when conditionally modifying vectors
@@ -330,6 +331,9 @@ df["a"]
 
 
 ## Subseting nothig + assignment preserve the original object class
+
+str(mtcars)
+# 'data.frame':	32 obs. of  11 variables:
 
 # length(mtcars) # [1] 11
 mtcars[] <- lapply(mtcars, as.integer)
@@ -385,10 +389,10 @@ info <- data.frame(
 )
 head(info, 2)
 
-# want to corresponding infor for each value of grades
+# want to correspond infor for each value of grades
 # two ways to do this:
   # match() and integer subsetting
-  # rownames() and character subseeting
+  # rownames() and character subseting
 
 
 # match()
@@ -558,6 +562,11 @@ which(x)
 # return true
 # return the integer postion of boolean true
 # [1]  4  7 10 these postion are true
+
+
+x <- sample(100) < 50
+length(which(x)) # [1] 49
+
 
 # unwhich
 unwhich <- function(x, n){

@@ -145,6 +145,92 @@ str(Matr_att)
 head(Matr_att)
 
 
+#================
+# making vectors
+#================
+
+##
+rev()
+  # provides a reversed version of its argument.
+x <- c(1:5, 5:3)
+rev(x)
+
+
+##
+combn()
+  # Generate all combinations of the elements of x taken m at a time
+  # If argument FUN is not NULL, applies a function given by the argument to each point
+  # If x is a positive integer, returns all combinations of the elements of seq(x) taken m at a time.
+combn(letters[1:4], 2)
+combn(seq(5), 2, min)
+# = combn(5, 2)
+# [1] 1 1 1 1 2 2 2 3 3 4
+# seq(5) = 1,2,3,4,5
+# combination: 
+  # 12, 13, 14, 15, min = 1
+  # 23, 24, 25, min = 2
+  # 34, 35, min = 3
+  # 45,  min = 4
+
+
+## 
+as.numeric()
+  # for double precision 
+
+
+#====================
+#lists & data.frames
+#==================== 
+
+split()
+  # split(x, f, drop = FALSE, ...)
+  # divides the data in the vector x into the groups defined by f
+  # x: vector or data frame containing values to be divided into groups.
+  # f: a ‘factor’ in the sense that as.factor(f) defines the grouping, or a list of such facto
+  # drop: ogical indicating if levels that do not occur should be dropped
+
+split(x, f, drop = FALSE, ...) <- value
+  # value: a list of vectors or data frames compatible with a splitting of x. 
+
+
+split(1:10, 1:2)
+# $`1`
+#[1] 1 3 5 7 9
+
+#$`2`
+#[1]  2  4  6  8 10
+
+
+require(stats); require(graphics)
+n <- 10; nn <- 100
+g <- factor(round(n * runif(n * nn)))
+str(g)
+#[1] 5  10 6  9  10 8 
+#Levels: 0 1 2 3 4 5 6 7 8 9 10
+
+
+x <- rnorm(n * nn) + sqrt(as.numeric(g))
+xg <- split(x, g)
+str(xg)
+#List of 11
+#$ 0 : num [1:50] 2.3937 1.6635 1.318 0.3456 -0.0188 ...
+#$ 1 : num [1:105] 2.13 1.97 0.51 1.98 1.06 ...
+#$ 2 : num [1:91] 0.282 2.186 2.911 2.691 1.613 ...
+#$ 3 : num [1:108] 3.19 3.15 3.1 2.14 2.02 ...
+#$ 4 : num [1:105] 1.75 1.77 2.59 1.73 3.55 ...
+
+# those with 0 labled elements in x is catorgorized into the 1st row
+  # those with 1 labled elements in x in catorgoized into the 2nd row
+
+boxplot(xg, col = "lavender", notch = TRUE, varwidth = TRUE)
+
+# the boxes are drawn with widths proportional to the square-roots of the number of observations in the groups
+# if notch is TRUE, a notch is drawn in each side of the boxes. 
+  #  If the notches of two plots do not overlap this is ‘strong evidence’ that the two medians differ 
+
+
+
+
 
 
 

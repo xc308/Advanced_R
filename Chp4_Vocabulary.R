@@ -229,6 +229,36 @@ boxplot(xg, col = "lavender", notch = TRUE, varwidth = TRUE)
   #  If the notches of two plots do not overlap this is ‘strong evidence’ that the two medians differ 
 
 
+#=============
+# control flow
+#=============
+
+if (cond) expr
+if (cond) cond.expr else  alt.expr
+
+
+# for
+for (var in seq) expr
+
+# while
+while(cond) expr
+
+# repeat
+repeat  expr
+
+
+## break
+#  breaks out of a for, while or repeat loop
+ 
+
+## next 
+  # halts the processing of the current iteration and advances the looping index
+
+# oth break and next apply only to the innermost of nested loops.
+
+
+ifelse(test, yes, no)
+
 
 
 

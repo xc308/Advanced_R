@@ -207,9 +207,12 @@ g <- factor(round(n * runif(n * nn)))
 str(g)
 #[1] 5  10 6  9  10 8 
 #Levels: 0 1 2 3 4 5 6 7 8 9 10
-
+10*range(runif(n * nn))
+# [1] 0.0006503146 9.9733789591
 
 x <- rnorm(n * nn) + sqrt(as.numeric(g))
+str(x)
+head(x, 20)
 xg <- split(x, g)
 str(xg)
 #List of 11
@@ -260,7 +263,65 @@ repeat  expr
 ifelse(test, yes, no)
 
 
+#=========================
+## Common data structures
+#=========================
+
+## date time
+MK <- ISOdate(year = 1980, month = 07, day = 15)
+# [1] "1980-07-15 12:00:00 GMT"
+
+XC <- ISOdate(year = 1987, month = 08, day = 13)
+
+difftime(MK, XC)
+# Time difference of -2585 days
+
+library(lubridate)
 
 
+
+## character manipulation
+name_char <- c("Mark Briers", "Alison Briers", 
+               "Xiaoqing", "Skylar")
+
+grep(pattern = "a", name_char)
+# [1] 1 3 4
+
+
+##
+strsplit(x, split)
+  # Split the elements of a character vector x into substrings according to the matches to substring split within them
+  # x : character vector
+  # split: character vector 
+   #If empty matches occur, in particular if split has length 0, 
+    # x is split into single characters. 
+   #If split has length greater than 1, it is re-cycled along x.
+
+strsplit(name_char, split = " ")
+
+
+strsplit("A text I want to display with spaces", NULL)[[1]]
+noquote(strsplit("A text I want to display with spaces", NULL)[[1]])
+
+noquote(strsplit("I miss Mark a lot today.", split = " ")[[1]])
+
+
+##
+tolower() 
+  # to lower case
+toupper
+  # to upper case
+
+## 
+substring("abcdef", 1:6, 1:6)
+
+x <- c("asfef", "qwerty", "yuiop[", "b", "stuff.blah.yech")
+
+substring(x, 2) <- c("..", "+++")
+x
+
+#[1] "a..ef"           "q+++ty"         
+#[3] "y..op["          "b"              
+#[5] "s..ff.blah.yech"
 
 

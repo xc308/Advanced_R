@@ -325,3 +325,92 @@ x
 #[5] "s..ff.blah.yech"
 
 
+##==========
+# factors
+##=========
+
+## 
+options(stringsAsFactors = FALSE)
+
+
+## 
+interaction()
+  # computes a factor which represents the interaction of the given factors. 
+  # the factors for which interaction is to be computed, or a single list giving those factors
+
+
+a <- gl(2, 4, 8) # 2 levels, each level repeat 4, total 8
+  # [1] 1 1 1 1 2 2 2 2
+  # Levels: 1 2
+
+b <- gl(2, 2, 8, labels = c("ctrl", "treat"))
+  # [1] ctrl  ctrl  treat treat ctrl ctrl  treat treat
+  #Levels: ctrl treat
+
+s <- gl(2, 1, 8, labels = c("M", "F"))
+  #[1] M F M F M F M F
+  #Levels: M F
+
+interaction(a, b)
+  #[1] 1.ctrl  1.ctrl  1.treat 1.treat
+  #[5] 2.ctrl  2.ctrl  2.treat 2.treat
+  #4 Levels: 1.ctrl ... 2.treat
+
+
+interaction(a, b, s, sep = ":")
+
+stopifnot(
+  identical(a:s,interaction(a, s, sep = ":", lex.order = TRUE)),
+  identical(a:s:b,interaction(a, s, b, sep = ":", lex.order = TRUE))
+  )
+
+## when lex.order = FALSE, 
+  # the levels are ordered so the level of the first factor varies fastest, 
+  # then the second and so on.
+
+
+##
+gl()
+  # Generate factors by specifying the pattern of their levels
+  # n: integer, the number of levels
+  # k: integer, the number of replications
+
+
+##
+cut()
+
+
+##===================
+## Array manipulation
+##===================
+
+array()
+
+dim()
+
+dimnames()
+
+aperm(a, perm = )
+  # Array Transposition
+  # Transpose an array by permuting its dimensions and optionally resizing it.
+  # a: the array to be transposed
+  # perm: the subscript permutation vector, 
+          # usually a permutation of the integers 1:n, 
+          # where n is the number of dimensions of a. 
+
+          # The default (used whenever perm has zero length) is to reverse the order of the dimensions.
+
+
+# The function t provides a faster and more convenient way of transposing matrices.
+
+
+
+
+
+
+
+
+
+
+
+

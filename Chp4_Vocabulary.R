@@ -325,7 +325,7 @@ x
 #[5] "s..ff.blah.yech"
 
 
-##==========
+##=========
 # factors
 ##=========
 
@@ -356,7 +356,6 @@ interaction(a, b)
   #[5] 2.ctrl  2.ctrl  2.treat 2.treat
   #4 Levels: 1.ctrl ... 2.treat
 
-
 interaction(a, b, s, sep = ":")
 
 stopifnot(
@@ -378,6 +377,7 @@ gl()
 
 ##
 cut()
+
 
 
 ##===================
@@ -402,6 +402,44 @@ aperm(a, perm = )
 
 
 # The function t provides a faster and more convenient way of transposing matrices.
+
+
+
+##==========
+# statistics
+##==========
+
+#-----------------
+## Matrix algebra
+#-----------------
+
+qr()
+  # computes the QR decomposition of a matrix.
+  
+svd()
+
+# %o%
+  # Outer Product of Arrays X and Y is the array A with dimension c(dim(X), dim(Y))
+  # outer(X, Y, FUN = "*", ...)
+
+  
+## Condition number
+rcond()
+# Compute or Estimate the Condition Number of a Matrix
+  
+  # Condi number is the norm of the matrix product 
+    # the norm of the inverse matrix
+    
+  # kappa() computes by default (an estimate of)
+    # the L2-norm condition number of a matrix
+      # or of the R matrix of a QR decomposition.
+    
+    # The L2-norm condition number can be shown 
+      # to be the ratio of the largest to the smallest
+      # non-zero singular value of the matrix.
+
+
+View(kappa)
 
 
 

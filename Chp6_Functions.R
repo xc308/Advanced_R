@@ -2,6 +2,10 @@
 # Chapter 6 Function 
 #**********************#
 
+install.packages("pryr")  # explore what happens when modifying vectors in place.
+library(pryr)
+
+
 #========================#
 # 6.1 Function Components 
 #========================#
@@ -9,11 +13,12 @@
 # All function has 3 parts:
   # the body(), the code inside the function
   # the formals(), the list of arguments which controls how you call the function
-  # the envirnoment(), the "map"of the locations of the function's variables
+  # the envirnoment(), the "map" of the locations of the function's variables
 
 
 f <- function(x) x^2
 f
+body(f)
 formals(f) #  $x
 environment(f) # <environment: R_GlobalEnv>
 
@@ -38,6 +43,73 @@ sum
 
 
 View(sapply)
+
+# only found in base package
+  # they operate at low level, more efficient
+
+
+#=====================
+# 6.2 Lexical scoping
+#=====================
+
+#--------------------
+# 6.2.1 Name masking
+#--------------------
+
+x <- 1
+h <- function() {
+  y <- 2
+  i <- function() {
+    z <- 3
+    c(x, y, z)
+  }
+  i()
+}
+h()
+rm(x, h)
+
+
+#-------------------
+# 6.2.3 fresh start
+#-------------------
+
+# exist() 
+  # T if a varaible of that name has in existence
+
+j <- function() {
+  if (!exists("a")) {
+    a <- 1
+  } else {
+    a <- a + 1
+  }
+  print(a)
+}
+
+j() # [1] 1
+# but no matter how many times run, it always return same 1
+# each time a function called, a new environment is created to host execution
+# function does not remember what happened last time
+# each invocation is independent.
+rm(j)
+
+exists("a")
+rm(a)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

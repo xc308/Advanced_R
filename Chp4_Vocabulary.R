@@ -427,7 +427,7 @@ svd()
 rcond()
 # Compute or Estimate the Condition Number of a Matrix
   
-  # Condi number is the norm of the matrix product 
+  # Condi number is the norm of the matrix times 
     # the norm of the inverse matrix
     
   # kappa() computes by default (an estimate of)
@@ -439,9 +439,44 @@ rcond()
       # non-zero singular value of the matrix.
 
 
-View(kappa)
 
 
+##==============
+# Working with R
+##==============
+
+citation()
+# To cite R in publications use:
+
+
+##-help
+vignette("package name")
+# view the vignette of a package
+
+
+##-debugging
+recover()
+
+
+##====
+# I/O
+#=====
+
+#saveRDS(object = , file = "")
+  # save a single R obj to a file
+
+#save(..., file = )
+  # writes an external representation of R objects to the specified file. 
+  # The objects can be read back from the file at a later date by using the function load
+
+
+path.expand(path = )
+
+path.expand("~/foo")
+# [1] "/Users/chenxiaoqing/foo"
+
+# Expand a path name, 
+  # e.g.by replacing a leading tilde by the user's home directory
 
 
 

@@ -87,29 +87,49 @@ j <- function() {
 
 j() # [1] 1
 # but no matter how many times run, it always return same 1
+
 # each time a function called, a new environment is created to host execution
 # function does not remember what happened last time
+
 # each invocation is independent.
 rm(j)
 
-exists("a")
-rm(a)
 
 
+##-----------------
+# Dynamic lookup
+##-----------------
 
+# lexical scoping: where to look for values
+                  # not when
 
+# R look for values only when the function is run
+# so output of a function can be different depending on 
+  # objects outside its environment
 
+f <- function() {x}
+#rm(x)
+x <- 12
+f() # [1] 12
 
+x <- 16
+f() # [1] 16
 
+## Note: 
+  # want to avoid this behavior as this means
+  # the function is not self-contained
 
+  # common error: when there's a spelling error in function 
+      # don't get an instant error
+      # To avoid this, use findGlobals() from codetools
+          # lists all the external dependencies of a function
 
+f <- function() {x + 1}
+codetools::findGlobals(f)
+# [1] "{" "+" "x"
 
-
-
-
-
-
-
+# NOT possible to make a function completely self-contained
+  # as always rely on functions defined in base R
 
 
 

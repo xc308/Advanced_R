@@ -184,9 +184,20 @@ x <- list(1:3, 4:9, 10:12)
 sapply(x, "[", 2) # [1]  2  5 11
 
 
+
 #=======================#
 # 6.4 Function arguments
 #=======================#
+
+# useful: distinguish btw formal arguments and the actual ones of a function
+  # Fomal arguements: a property of the function
+  # Actual or calling arguements: vary each time when function is called. 
+
+
+# how calling arguements are mapped to formal arguments
+# how call a function given a list of arguments
+# how default arg work and the impact of lazy evaluation
+
 
 #------------------------#
 # 6.4.1 Calling functions
@@ -259,6 +270,9 @@ arguments <- list(1:10, na.rm = TRUE)
 do.call(mean, arguments) # [1] 5.5
 
 
+argument_lst <- list("Mark,", " I miss you <3", sep = "")
+do.call(paste0, argument_lst)
+
 
 #------------------------------------#
 # 6.4.3 Defalut and missing arguments
@@ -280,6 +294,18 @@ g <- function(a = 1, b = a * 2){
 }
 g(10, 20)
 
+
+## see if an arg is missing or not
+i <- function(a, b) {
+  print("Is 'a' missing?")
+  print("Is 'b' missing?")
+  c(missing(a), missing(b))
+}
+
+i() # [1] TRUE TRUE
+i(a = 1) # [1] FALSE  TRUE
+i(b = 2) # [1]  TRUE FALSE
+i(a = "Mark", b = "Briers") # [1] FALSE FALSE
 
 
 #-----------------------#

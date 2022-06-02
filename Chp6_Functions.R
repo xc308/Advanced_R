@@ -319,8 +319,41 @@ add_fun <- function(x){
   function(y) x + y
 }
 adders <- lapply(1:10, add_fun)
+adders
+
 adders[[1]](10) # [1] 11 # x = 1, y = 10
 adders[[10]](10) # [1] 20 # x = 10, y = 10
+adders[[3]](10) # [1] 13
+
+
+
+
+add_force <- function(x) {
+  force(x)
+  function(y) x + y
+}
+
+adders_frc <- lapply(1:10, add_force)
+adders_frc
+adders_frc[[1]](10) # [1] 11
+
+
+
+## default arg are evaluated inside the function
+# means if the expression depends on the current env
+# the result will differ depending on whether use default value
+# or explicitly provide one
+
+f <- function(x = ls()) {
+  a <- 1
+  x # ls() evaluated in the function
+}
+f() # [1] "a" "x"
+
+
+f(ls()) # ls() evaluated in the global env
+
+
 
 
 ## Laziness is useful in if statement

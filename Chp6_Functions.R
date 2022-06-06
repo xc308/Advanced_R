@@ -372,6 +372,44 @@ if(is.null(a)) stop("a is null")
 View(plot.default)
 
 
+
+##-----------
+# 6.4.5 ...
+##-----------
+
+# ... will match any arguments not otherwise matched
+  # and can be easily pass onto other functions
+
+# useful when want to collect arguments to call another
+  # function, but don't want to prespecify their possible names
+  # ... is often used in conjunction with S3 generic function to
+  # allow individual methods to be more flexible
+
+
+plot.default()
+
+# to capture ... in a form easier to work, use
+list(...)
+
+f <- function(...) {
+  names(list(...))
+}
+
+f(a = 1, b = 2) 
+# [1] "a" "b"
+
+names(list(a = 1, b = 2))
+# [1] "a" "b"
+
+## cost of using ...
+  # any spelling mistake will not raise error
+  # any arguements after ... must be fully named
+
+# better to be explicit not implicit
+
+
+
+
 #===================#
 # 6.5 Special Calls #
 #===================#

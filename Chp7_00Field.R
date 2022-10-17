@@ -58,6 +58,35 @@ library(pryr)
     
 
 
+#=============
+# Base types
+#=============
+# Every R object is a C structure that describes
+  # how that object is stored in memory. 
+  # The structure includes: 
+     # contents of the obj
+     # info needed for memory management
+     # a type
+
+
+# Base types:
+  # only R core team can create new types
+  # most common base types:
+    # atomic vectors
+    # lists
+  # also encompass functions, environments, names, calls, promises
+# typeof()
+
+f <- function() {}
+typeof(f)  
+# [1] "closure"
+is.function(f) # [1] TRUE
+
+# S3 can build on top of any base type
+# S4 use a special base type. 
+
+
+
 
 
 

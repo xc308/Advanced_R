@@ -86,8 +86,70 @@ is.function(f) # [1] TRUE
 # S4 use a special base type. 
 
 
+#====
+# S3 
+#====
+
+# most obj encountered are S3 obj
+
+install.packages("pryr")
+library(pryr)
+
+df <- data.frame(x = 1:10, y = letters[1:10])
+otype(df)
+# [1] "S3" so data frame is an S3 obj
+
+otype(df$x)
+# [1] "base" so atomic vector is a base type; so is list
+
+otype(df$y)
+#[1] "base"
 
 
+# In S3, methods belong to generic functions. 
+# S3 methods don't belong to objects or functions
+
+# To determine if a function is an S3 generic function, 
+  # UseMethod() to inspect its source code
+  # that's the function figure out the correct method to call
+  # the process of method dispatch
+
+
+# Functions do method dispatch in C are called internal generics
+
+# S3 generic functions is to call the right S3 method
+# Recognise S3 method by their names:
+  # the mean() generic function has Date() method
+    # so mean.Date()
+  # the print() generic function has factor() method
+    # so print.factor()
+
+
+
+# Visualise all the methods belong to gerneric funcions 
+  # with methods()
+methods("mean")
+# [1] mean.Date     mean.default  mean.difftime
+# [4] mean.POSIXct  mean.POSIXlt
+
+methods("t.test")
+#[1] t.test.default* t.test.formula*
+
+# most S3 methods wion't be visable
+  # use getS3method() to read their source code
+
+
+# can see all the generics functions have a method for a given class
+methods(class = "ts")
+#  [1] [             [<-           aggregate    
+#[4] as.data.frame cbind         coerce       
+#[7] cycle         diff          diffinv      
+#[10] initialize    kernapply     lines        
+#[13] Math          Math2         monthplot    
+#[16] na.omit       Ops           plot         
+#[19] print         show          slotsFromS3  
+#[22] t             time          window       
+#[25] window<-
 
 
 

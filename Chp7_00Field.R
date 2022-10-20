@@ -153,5 +153,94 @@ methods(class = "ts")
 
 
 
+#======================================
+# Defining classes and creating objects
+#======================================
+
+# S3 has no formal def of a class, ad hoc system
+# To make an obj an instance of a class, 
+   # just need to take an existing base obj
+    # and set the class attribute
+# use structure(), or with class<-()
+
+# create and assign class in one step
+foo <- structure(list(), class = "foo")
+
+# alternatively
+  # 1st create a list
+foo <- list()
+  # set the class 
+class(foo) <- "foo"
+
+# S3 objs are usually build on top of lists, atomic vectors
+  # with attributes
+
+# can also turn functions into S3 objs.
+
+class(foo) # [1] "foo"
+
+# to see if an obj inherits from a specfic class 
+inherits(x, "classname")
+inherits(foo, "foo")
+# [1] TRUE
+
+
+# The class of an S3 obj can be a vector, 
+  # which describes behavior from most specific to least specific
+
+# the calss of the glm() obj is c("glm", "lm")
+# indicating the glm inherits behavior from lm
+
+
+# class names are usually lower case, and avoid "."
+
+# most S3 classes provide a consturtor function:
+foo <- function(x) {
+  if(!is.numeric(x)) stop("X must be numeric")
+  structure(list(x), class = "foo")
+}
+# constructor functions usually have the same name as the class.
+
+
+# Can change the class of existing obj
+install.packages("ggplot2")
+library(ggplot2)
+
+mod <- lm(log(mpg) ~ log(disp), data = mtcars) 
+class(mod)
+# [1] "lm"
+
+print(mod)
+
+# change the class of mod
+class(mod) <- "data.frame"
+print(mod) # not good
+# but the data is still there
+mod$coefficients
+# (Intercept)   log(disp) 
+#-0.1144486  -0.4585683 
+
+mod$residuals
+
+
+# Note:
+# While you can change the type of an obj, you never should
+# 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

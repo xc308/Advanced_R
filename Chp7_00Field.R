@@ -228,6 +228,39 @@ mod$residuals
 # 
 
 
+#==================================
+# Creating new methods and generics
+#==================================
+
+# To add a new generic, create a function that calls UseMethod()
+# UseMethod() takes two arguments:
+  # the name of the generic function
+  # the arg to use for method dispatch
+  # if the 2nd is omitted, it will dispatch on the 1st arg to the function
+
+f <- function(x) UseMethod("f")
+
+# but a generic function isn't useful w/o some methods
+# To add a method, just create a regular function with 
+  # the right name generic.name
+f.a <- function(x) "Class a"
+# generic.name <- a regular function
+
+
+# create a list and assign class in one go
+a <- structure(list(), class = "a")
+class(a) # "a"
+f(a)
+# [1] "Class a"
+
+
+# Adding a method o an existing generic works 
+mean.a <- function(x) "a"
+mean(a)
+#[1] "a"
+
+
+
 
 
 

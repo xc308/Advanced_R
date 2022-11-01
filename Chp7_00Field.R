@@ -260,20 +260,46 @@ mean(a)
 #[1] "a"
 
 
+#======================
+# 7.2.4 Method dispatch
+#======================
+
+# S3 method dispatch is simple
+  # UseMethod() creates a vector of function names, e.g., 
+    # paste0("generic", ".", c(class(x), "default")
+
+f <- function(x) UseMethod("f")
+f.a <- function() "Class a"
+f.default <- function() "Unknown class"
+f(structure(list(), class = "a"))
+f(structure(list(), class = c("b", "a")))
 
 
+#----
+# call an S3 generic with a non-S3 obj
+#----
+# non-internal s3 GENERICS will dispatch on the implicit class
+# of base types
 
+# the rules determine the implicit class of a base type are shown below
+iclass <- function(x) {
+  if(is.object(x)) {
+    stop("x in not a primitive type", call. = FALSE)
+  }
+  
+  c(
+    if(is.matrix(x)) "matrix",
+    if(is.array(x) && !is.matrix(x)) "array",
+    if(is.double(x)) "double",
+    if(is.integer(x)) "integer",
+    mode(x)
+  )
+} 
 
+iclass(matrix(1:5))
+# [1] "matrix"  "integer" "numeric"
 
-
-
-
-
-
-
-
-
-
-
+iclass(array(1.5))
+# [1] "array"   "double"  "numeric"
 
 

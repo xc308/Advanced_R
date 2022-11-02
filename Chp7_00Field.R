@@ -303,3 +303,103 @@ iclass(array(1.5))
 # [1] "array"   "double"  "numeric"
 
 
+
+#==========
+# 7.3 S4
+#==========
+
+# formal and rigour
+# Methods belong to functions, not classes
+  # classes have formal definitions which describe their fields and parent classes
+  # method dispatch can be based on mulitple arguments to a generic
+  # a special operator @ to extract slots aka fields from S4 objects
+
+# all S4 related code is stored in methods package
+# this package is always available when running R iteratively
+  # good to include library(methods) when using S4
+
+
+
+#------------------------------------------------------
+# 7.3.1 Recognising objects, generic functions, methods
+#------------------------------------------------------
+
+## Recognise
+  # str() : "formal class"
+  # isS4(): true
+  # pryr::otype(): "S4"
+
+# aren't any S4 classes in the base packages 
+  #(stats, graphics, utils, datasets, base)
+
+# create an S4 obj first from the built-in stats4 package
+  # provides S4 classes and methods associated with mle
+
+library(stats4)
+
+y <- c(26, 17, 13, 12, 20, 5, 9, 8, 5, 4, 8)
+nLL <- function(lambda) {
+  -sum(dpois(y, lambda = lambda, log = TRUE))
+}
+fit <- mle(nLL, start = list(lambda = 5), nobs = length(y))
+
+isS4(fit) # [1] TRUE
+
+#otype(fit)
+
+isS4(nobs) # [1] TRUE
+
+
+# retrieve an S4 method and describe later
+mle_nobs <- method_from_call(nobs(fit))
+
+
+## Use is() with one arg to list all classes that 
+  # an obj inherits from
+is(fit) # [1] "mle"
+
+# Use is() with two arg to test if an obj inherits from a specific class
+is(fit, "mle")
+# [1] TRUE
+
+
+# can get a list of all S4 generics with getGenerics()
+  # list all S4 classes with getClasses(). 
+  # list all S4 methods with showMethods()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

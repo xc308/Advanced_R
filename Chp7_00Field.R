@@ -369,11 +369,70 @@ is(fit, "mle")
 
 
 
+#========================================
+# 7.3.2 Defining classes and creating obj
+#========================================
+# define the representation of a class with setClass()
+# create a new obj with new()
+# class - obj
+
+# An S3 obj has three key properties:
+  # A name: convention use UpperCamelCase ThisIsAnExample
+  # A named list of slots (fields)
+      # defines slot names and permited classes
+      # a person class is represented by a char name and a
+        # a numeric age
+        # list(name  = "character", age = "numeric")
+
+  # a string giving the class it inherits from, or it contains
+  # 
+
+# S4 class has other optional properties like 
+  # a validity method
+  # that tests if an obj is valid
+  # a prototype obj
+    # that defines default slot values
+
+# ?setClass for more detail
+
+# Example:
+# creating a Person class with fields name and age
+# Employee class ther inherits from Person
+# add an additional slot, boss
+# To create objs, call new() with the name of class and
+  # name-value pair of slot values
 
 
+setClass('Person',
+         slots = list(name = "character", age = "numeric"))
+
+setClass('Employee',
+         slots = list(boss = 'Person'),
+         contains = 'Person')
+
+alison <- new('Person', name = 'Alison', age = 35)
+mark <- new('Employee', name = 'Mark', age = 42, boss = alison)
 
 
+# To access slots of an S4 obj, use @ or slot
+alison@age
+slot(mark, "boss")
+mark@boss
 
+# if the S4 obj contains (inherits from) an S3 class or a base type
+  # it wil have special .Data slot which contains the underlying base type
+setClass("RangedNumeric",
+         contains = 'numeric',
+         slots = list(min = 'numeric', max = 'numeric'))
+rn <- new('RangedNumeric', 1:10, min = 1, max = 10) # new(class, obj content...)
+
+rn@min # [1] 1
+rn@max # [1] 10
+rn@.Data # [1]  1  2  3  4  5  6  7  8  9 10
+  # contains underlying base type or S3 obj
+
+# Note:
+  # if modified the class, must recreate any objects of that class.
 
 
 

@@ -435,12 +435,39 @@ rn@.Data # [1]  1  2  3  4  5  6  7  8  9 10
   # if modified the class, must recreate any objects of that class.
 
 
+#=========
+# 7.3.3 Creating new methods and generics
+#=========
+
+# S4 provides special functions for creating new generics
+  # and methods
+# setGeneric() creats new generic or converts an existing function into generic
+# setMethod() takes 
+  # the name of generic, 
+  # the classes the method should be associated with
+  # a function that implements the method
+
+# Example:
+  # - take union() function as new generic, which usually only works for vector
+  # - now want it associated with data frame class
+  # - define a function that implements the union method
+setGeneric("union")
+# create a genric verision of the named function s.t. methods maybe defined later
+setMethod("union",
+          c(x = "data.frame", y = "date.frame"),
+          function(x, y) {
+            unique(rbind(x, y))
+          }
+        )
+# create a method for generic function
 
 
-
-
-
-
+# if you create a new generic from scratch, you need to supply
+# a function that calls standardGeneric():
+setGeneric("myGeneric", function(x) {
+  standardGeneric("myGeneric")
+})
+# Note: standardGeneric is equivalent to UseMethod()
 
 
 

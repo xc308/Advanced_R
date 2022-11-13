@@ -470,6 +470,86 @@ setGeneric("myGeneric", function(x) {
 # Note: standardGeneric is equivalent to UseMethod()
 
 
+#======================
+# 7.3.4 Method dispatch
+#======================
+
+# if an S4 generic dispatches on a single class with a single parent
+  # S4 method dispatch is the same as S3 dispatch
+
+  # main difference: how the defalut values are set up
+  # S4 uses special class ANY to match any class 
+    # and "missing" to match a missing arg
+  
+# S4 like S3 also has group generics
+  # ?S4groupGeneric
+
+# a way to call the "parent method"
+  # callNextMethod()
+
+
+
+# Dispatch multiple classes and/or multiple inheritence,
+  # as it will be difficult to know which method has be dispatch to which class
+
+
+##=======
+# RC
+##=======
+
+# RC obj behave more like objs do in Python, C++
+# Reference classes are a special S4 class that wraps around an environment
+
+#---------
+# Defining Classes and creating obj
+#---------
+# setRefClass()
+# only required arg is an alphanumeric name
+# can use new() to create a new RC obj
+  # but good to use the obj returned by setRefClass()
+
+Account <- setRefClass("Account")
+Account$new()
+# Reference class object of class "Account"
+
+#  setRefClass() also accepts 
+  # a list of name-class pairs that defined  FIELDS (= S4 slots)
+  # Additional named arg passed to new() will set initial values of the fields
+
+  # can get and set field values with $
+
+Account <- setRefClass("Account",
+            fields = list(balance = "numeric")) # name-class pair to define class fields
+
+a <- Account$new(balance = 100)
+a
+# Reference class object of class "Account"
+#Field "balance":
+#  [1] 100
+a$balance
+a$balance <- 200
+a$balance # [1] 200
+
+# instead of supplying a class name for the field
+  # can provide a single argument function act as an accessor method
+  # allows you to add custom behavior when getting or setting a field
+# see ?setRefClass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

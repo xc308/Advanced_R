@@ -536,14 +536,97 @@ a$balance # [1] 200
 # see ?setRefClass
 
 
+## An obj is not very useful w/o some behavior defined by methods
+# RC methods are associated with a class 
+  # and can modify its fields in place
+
+# In below expample 
+  # access the value of fields with their name,
+  # modify them with <<-
+
+setRefClass("Account",
+            fields = list(balance = "numeric"),
+            methods = list(
+              withdraw = function(x) {
+                balance <<- balance - x  # access field's value with their name
+                                        # modify them with <<-
+              },
+              
+              deposit = function(x) {
+                balance <<- balance + x
+              }
+            )
+          )
+
+
+# can call an RC method in the same way as access a field
+a <- Account$new(balance = 100)
+a
+# Reference class object of class "Account"
+# Field "balance":
+#  [1] 100
+
+a_0 <- Account$new(balance = 100)
+a_0$deposit(150)
+a_0$balance
+a_0$withdraw(150)
+a_0$balance
+a_0$withdraw(50)
+a_0$balance
+
+
+# the final important arg to setRefClass() is contains
+  # this is the name of the parent RC class to inherit behavior from   
+
+# following example creates a new type of bank account,
+  # returns an error if balance go below zero
+
+NoOverDraft <- setRefClass("NoOverDraft",
+                           contains = "Account",
+                           methods = list(
+                             withdraw = function(x) {
+                               if(balance < x) stop ("No enough money!")
+                               balance <<- balance - x
+                             }
+                           )
+                        )
+
+
+accountJon <- NoOverDraft$new(balance = 100)
+accountJon$balance # [1] 100
+accountJon$deposit(50)  # method inherit from class "Account"
+accountJon$balance # [1] 150  # fields inherit from class "Account"
+accountJon$withdraw(2000)
+# Error in accountJon$withdraw(2000) : No enough money!
+
+
+## Note:
+  # all reference classes eventually inheirt from envRefClass. 
+  # it provides useful methods 
+    # e.g., copy(), callsuper() to call parent field
+        # field() to get the value of a field given its name
+        # export() equivalent to as()
+        # show() overriden to control printing
 
 
 
+#==================================
+# 7.4.2 Recognising objs and methods
+#==================================
+
+# Can recognise RC objs because they are S4 obj (isS4(x))
+  # that inherit from "refClass" (is(x, "refClass"))
+    # pryr::otype() will return "RC"
 
 
 
+#==================================
+# 7.4.3 Method dispatch
+#==================================
 
-
+# simple in RC as methods are associated with classes, not functions
+# when call x$f, R will look for a method in class x, then in its parent, then its great parent
+# from within a method, can call the parent method directly with callSuper()
 
 
 

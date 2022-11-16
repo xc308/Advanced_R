@@ -82,32 +82,119 @@ e$a # [1] 1 2 3
     # from the top-level interactive workspace
   # it contains one env for each attached package 
     # and any other objs that you've attach()ed.
+  # it also contains a special env called Autoloads which 
+    # is used to save memory by only loading package objs when needed
+
+# can access any env on the search list using as.environment()
+search()
+
+as.environment("package:stats4")
+
+# Everytime load a new package with library()
+  # it's inserted between the global env and the package that was previously loaded
+
+
+## to create an evn mannually, use new.env()
+  # can list the bindings in the env's frame with ls()
+  # see its parent with parent.env()
+
+e <- new.env()
+parent.env(e)
+# <environment: R_GlobalEnv>
+# the default parent for new.env() is the env from which it is called
+ls(e)
+# character(0)
+
+## the easiest way to modify the bindings in an env is to 
+  #  treat it like a list
+e$a <- 1
+e$b <- 2
+ls(e)
+# [1] "a" "b"
+# by default, ls() only shows name don't begin with .
+# use all.names = TRUE show all bindings in the env
+
+e$a # [1] 1
+
+e$.a <- 4 
+ls(e)
+# [1] "a" "b"
+ls(e, all.names = T)
+# [1] ".a" "a"  "b" 
+
+## Another useful way to view an env is ls.str()
+  # more useful than str()
+    # since it shows each obj in the env
+
+str(e) # <environment: 0x7fd9e7a39628>
+ls.str(e)
+# a :  num 1
+# b :  num 2
+ls.str(e, all.names = T)
+# .a :  num 4
+# a :  num 1
+# b :  num 2
+
+
+## Given a name, can extract the value to which it's bound with 
+  # $, [[]], get()
+  # $, [[]] only look in one env and return NULL if there's no binding with the name
+  # get() uses regular scoping rules, throws an error if the binding not find
+
+e$c <- 3
+e$c 
+# [1] 3
+e[["c"]] 
+# [1] 3
+get("c", envir = e) 
+# [1] 3
+
+
+## Deleting objs from environments a bit different from list
+  #  list: set it to NULL
+  # environment: such action will create a new binding to NULL;
+      # use rm() to remove the binding
+e <- new.env()
+e$a <- 1
+e$a <- NULL
+ls(e)
+# [1] "a"
+ls.str(e)
+# a :  NULL
+
+rm("a", envir = e)
+ls(e)
+# character(0)
+ls.str(e)
+# nothing returned!!
+
+
+## Determine if a binding exists in an env with exists()
+  # it follows regular scoping rules and look in parent env
+  # if don't want it look up, then inherits = F
+
+x <- 10
+exists("x", envir = e)
+# by look up e's parent env which is global env 
+# [1] TRUE
+
+exists("x", envir = e, inherits = F)
+# [1] FALSE
+# doesn't exist x string in the env e
+ls.str(e)
+# still nothing 
 
 
 
+## To compare envs, must use identical(), not ==
 
+identical(globalenv(), environment())
+# [1] TRUE
 
+globalenv() == environment()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Error in globalenv() == environment() : 
+# comparison (1) is possible only for atomic and list types
 
 
 

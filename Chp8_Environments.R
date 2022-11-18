@@ -197,6 +197,59 @@ globalenv() == environment()
 # comparison (1) is possible only for atomic and list types
 
 
+#================================
+# 8.2 Recursing over environments
+#================================
+
+# environments form a tree, 
+  # so it's convenient to write a recursive function
+
+# this section to understand the helpful pryr::where()
+# Given a name, where() finds the env where that name is defined
+  # using R's regular scoping rules
+
+library(pryr)
+x <- 5
+where("x")
+# <environment: R_GlobalEnv>
+
+where("mean")
+# <environment: base>
+
+# def of where() has two args:
+  # name: a string to look for
+  # an env: in which to start the search
+    # parent.frame() is a good deafult start
+
+where <- function(name, env = parent.frame()) {
+  if (identical(env, emptyenv())) {
+    # base case
+    # no binding, can not go any further up
+    stop("Can't find", name, call. = T)
+  } else if (exists(name, envir = env, inherits = F)) {
+    # success case
+    env
+  } else {
+    # recursive case, 
+    # name is not find in this env, try the parent
+    where(name, env = parent.frame(env))
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -237,6 +237,135 @@ where <- function(name, env = parent.frame()) {
 }
 
 
+#==================
+# 8.3 Function env
+#==================
+
+# most env are not created by you with new.env()
+# but are created as a consequence of using functions
+
+# 4 types of envs associated with a function: 
+  # enclosing: where a function is created
+  # binding: mean <- function(x)
+  # calling : create an short-lived execution env
+  # execution : stores variables created during execution
+  
+
+## The enclosing environment is the env
+  # where function was created
+  
+  # every function has one and only one enclosing env
+
+# For the other three types, 
+  # there may be 0, 1, or many envs associated with each function
+
+## binding a function to a name with <- defines a binding env
+
+## Calling a function creates an ephemeral(short-lived) 
+   # execution env
+   # that stores variables created during execution 
+
+
+
+#------------------------
+# 8.3.1 The enclosing env
+#------------------------
+
+# when a function is created, it gets a ref to the env where it was made
+  # this ref is the enclosing env
+  # is used for lexical scoping
+
+# can determine an enclosing env of a funtion by environment()
+   # with the name of the function as its 1st arg
+
+environment(fun = mean)
+# <environment: namespace:base>
+
+y <- 1
+f <- function(x) x + y
+environment(f)
+# <environment: R_GlobalEnv>
+
+
+# diagram:
+  # round rectangle: function
+  # small black circle: enclosing envirnment
+    # with an arrow pointing to its parent env, i.e.,R_GlobalEnv
+
+
+#------------------
+# 8.3.2 Binding env
+#------------------
+
+# the name of a function is defined by a binding
+# the binding envs are all envs that have a binding to the function
+
+# the above example: 
+  # the enclosing env is where the function(x) x+y is created
+    # which is the working interface: globalevn
+  # the binding env is where the function(x) is assiged to a name f
+    # which is also in the working interface: globalevn
+
+  # so the binding env is identical to enclosing env
+
+
+# can assign the function to a name in another env
+e <- new.env()
+e$g <- function() 1
+
+# enclosing env: where the function() 1 is created 
+  # globalenv
+# binding env: where the function() 1 's name is 
+  # in new env: e
+
+# enclosing env is where the function finds its values
+# binding env is where we can find the function
+
+
+## The difference between enclosing and binding env is important
+  # for pacakge namespaces
+
+# Package namespaces keep packages independent.
+  # Package A uses base mean() function 
+  # package B creates its own mean() function
+# namespaces ensure the package A continues to use the base mean
+# and it's not affected by package B
+
+
+# namespaces are implemented using environments
+  # taking advantage of the fact that functions don't 
+    # need to live in their enclosing env
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

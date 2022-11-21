@@ -336,6 +336,88 @@ e$g <- function() 1
   # taking advantage of the fact that functions don't 
     # need to live in their enclosing env
 
+# the base function sd(). 
+# its binding and enclosing environments are different
+
+# calling environment() to find enclosing env
+environment(sd)
+# <environment: namespace:stats> # defined in a package namespace
+
+# calling where() to find where the function name is defined
+where("sd")
+# <environment: package:stats>
+#attr(,"name")
+#[1] "package:stats"
+#attr(,"path")
+#[1] "/Library/Frameworks/R.framework/Versions/4.2/Resources/library/stats"
+
+## Notice the name of the function is in a different place
+   # than the place where the function is created. 
+
+
+## the definition of the sd() uses var()
+  # but if we use our own version of var(), 
+    # it doesn't affect sd(), because sd only uses the var() in base package
+  # our version of var() in the global env, indepent of base
+
+x <- 1:10
+sd(x) # [1] 3.02765
+
+var <- function(x, na.rm = T) 100 
+sd(x)
+# [1] 3.02765
+rm(var)
+sd(x)
+# [1] 3.02765
+
+
+## This works because every package has two envs associated with it
+  # the package env:
+      # contains all publicly accessible function
+      # is placed on the search path
+  # the namespace env:
+      # contains all functions including internal functions
+      # its parent env is a special imports env that 
+        # contains bindings to all the functions that 
+          # the package needs
+
+    # every exported function in a package is 
+      # bound into the package env
+
+      #where("sd")
+      #<environment: package:stats>
+    
+    # but is enclosed in the namespace env:
+
+      # environment(sd)
+      # <environment: namespace:stats>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

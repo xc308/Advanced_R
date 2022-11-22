@@ -393,10 +393,68 @@ sd(x)
       # <environment: namespace:stats>
 
 
+#----------------------
+#  8.3.3 Execution Env
+#----------------------
+
+exists("a", inherits = F)
+# [1] TRUE
+
+g <- function(x) {
+  if (!exists("a", inherits = F)) {
+    message("Defining a")
+    a <- 1
+  } else {
+    a <- a + 1
+  }
+  a
+}
+
+# 1st run of the function
+g(10)
+# Defining a
+# [1] 1
+
+# 2nd run of the function
+g(10)
+# Defining a
+# [1] 1
+
+## the result is the same value every time it's called
+  # because the fresh start principle
+
+# Each time a function is called, 
+  # a new env is created to host execution
+
+# The parent of the execution env 
+  # is the enclosing env of the function
+
+# once the function is completed, 
+  # this execution env is thrown away
 
 
+## When creat a function A inside another function B, 
+  # the enclosing env B is the excecution env A
+# then such execution env is no longer ephemeral
 
+# Example: 
+  # create a function factory plus()
+  # use plus() to create a new function plus_one()
+  # the enclosing env of plus_one() is the execution env of plus()
+  # where x is bound to the value 1
 
+plus <- function(x) {
+  function(y) {x + y}
+ }
+
+plus_one <- plus(1)
+
+identical(parent.env(environment(plus_one)), environment(plus))
+#[1] TRUE
+# environment(plus_one): enclosing of plus_one = excecution of plus
+# parent.env(excecution env) = enlosing env
+# parent.env(environment(plus_one)) = parent.env(excecution of plus)
+# enclosing of plus()
 
 
 

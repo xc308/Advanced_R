@@ -458,9 +458,9 @@ identical(parent.env(environment(plus_one)), environment(plus))
 
 
 
-#====================
+#-------------------
 # 8.3.4 Calling env
-#====================
+#-------------------
 
 # parent.frame(): 
     # returns the env where the function was called

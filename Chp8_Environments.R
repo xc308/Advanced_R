@@ -458,18 +458,67 @@ identical(parent.env(environment(plus_one)), environment(plus))
 
 
 
+#====================
+# 8.3.4 Calling env
+#====================
+
+# parent.frame(): 
+    # returns the env where the function was called
+    # returns the value of the names in that env where the func was called. 
 
 
+f2 <- function() {
+  x <- 10
+  
+  function() {
+    def <- get("x", environment())
+    call <- get("x", parent.frame())
+    list(defined = def, called = call)
+  }
+}
+
+g2 <- f2()
+x <- 20
+str(g2())
+# List of 2
+#$ defined: num 10
+#$ called : num 20
 
 
+x <- 0
+y <- 10
+f <- function() {
+  x <- 1
+  g()
+}
+
+g <- function() {
+  x <- 2
+  h()
+}
+
+h <- function() {
+  x <- 3
+  x + y
+}
+
+f()
+# [1] 13
 
 
+## Note each execution env has two parents: 
+    # enclosing env
+    # calling env
 
+# R's regular scoping rules ONLY use enclosing parent
 
-
-
-
-
+# if looking up variables in the calling env rather than 
+  # regular scoping rule, i.e., enclosing env
+  # is called dynamic scoping. 
+    # few language implements dynamic scoping
+    # hard to find how a find operates
+    # useful in function development that aids interactive data analysis. 
+    # see Chp13
 
 
 

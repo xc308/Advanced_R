@@ -582,12 +582,57 @@ ls()
   # in pryr package
 
 
+#===================
+# 8.5 Explicit envs
+#===================
+
+# Environments are useful data structures as
+  # they have ref semantics
+
+# when modify an R obj, it 1st make a copy then modify the copy
+# when you modify an env, it does not make a copy,
+    # but modify the env directly
+
+# example:
+modify <- function(x) {
+  x$a <- 2
+  invisible() # return an invisible copy of an obj
+}
+
+# but when you apply this function to an R obj, e.g., a list
+  # the original list is not changed becuase
+  # modifying a list acutally creates a copy 1st then modify it
+
+x_1 <- list()
+x_1$a <- 1
+modify(x_1)
+x_1$a # [1] 1
+
+## But if apply such modify function to an env
+  # the original env is modified
+
+x_e <- new.env()
+x_e$a <- 1
+modify(x_e)
+x_e$a # [1] 2
 
 
+## When create your new env, set its parent as empytenv
+  # as this can avoid inherit objs from somewhere
 
+x <- 1
+e1 <- new.env()
+get("x", envir = e1)
+# [1] 1
 
-
-
+e2 <- new.env()
+get("x", envir = e2)
+# [1] 1
+# BUT there's no x in the e2, it inheits from e1
+# to avoid this
+e3 <- new.env(parent = emptyenv())
+get("x", envir = e3)
+# Error in get("x", envir = e3) : object 'x' not found
 
 
 

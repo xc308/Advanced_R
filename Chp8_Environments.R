@@ -522,6 +522,71 @@ f()
 
 
 
+#============================
+# 8.4 Binding names to values
+#============================
+# assignment is the act of binding (or rebinding) a name
+  # to a value in an env
+
+# it's a counterpart to scoping
+# the set of rules determine how to find the value associated with a name
+
+
+# R can bind (assign) 
+  # values, expressions, functions, etc 
+  # to names
+
+# regular assignment create a binding between a name and an obj
+  # in the current env
+
+# Names usually consists of :
+  # letters
+  # digits,
+  # _
+# cann't begin with _
+# TURE, FALSE, if, function are reserved words for other purpose
+
+
+# can override the name rules 
+  # by using a name with any seq of chars by surrounding the name with backticks
+'a + b' <- 3
+':)' <- "simile"
+' ' <- "space"
+ls()
+
+
+## Regular arrow <- creates a variable in the current env
+# the deep assignment <<- never creates a varaiable in the current env
+  # but instead, modifies an existing variable found by walking up the parent env
+
+# can also do deep binding wih assign():name <<- value
+  # equivalent to assign("name", value, inherits = TRUE)
+
+# if <<- doesn't find an existing variable, 
+  # it will create one in the global env
+  # not ideal, 
+    # as global env introduces non-obvious dependecies betw functons. 
+
+# <<- most used in closure
+
+
+## Two special type of bindings: 
+  # delay
+  # active
+
+# delay binding creates and stores a promise to evaluate the expression
+  # when needed
+
+# Can create a delayed bindings with 
+  # the special assignment operator %<d-%
+  # in pryr package
+
+
+
+
+
+
+
 
 
 

@@ -635,6 +635,43 @@ get("x", envir = e3)
 # Error in get("x", envir = e3) : object 'x' not found
 
 
+## Envs are data structures useful for solving 3 common problems:
+  # avoid copies of large data
+  # manage state within a package
+  # efficiently look up values from names
+
+
+#---------------------
+# 8.5.1 Avoiding copies
+#---------------------
+
+# since env have ref semantics, it will never accidentally create a copy
+  # a useful vessel for large objs
+  # it's often a common technique for biconductor package
+    # which often have to manage large genomic objs
+
+# Now new version of R does not make a copy for list 
+  # so modifying an element of a list no longer make a deep copy
+  # but reuses existing vectors to save time. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -73,7 +73,7 @@ e$a # [1] 1 2 3
   # emptyenv(): the ultimate ancestor of all envs
               # the only env w/o parents
 
-  # environment(): the current env
+  # environment(): determine an enclosing env of a funtion by environment()
 
 
 # search() lists all parents of the global env. 

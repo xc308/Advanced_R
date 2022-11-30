@@ -34,13 +34,57 @@
   # condition handling tools: 
       # tryCatch()
       # try()
-
-  # 
-
-
+    # take specific actions when condition occurs
+   
 
 #* denfensive programming: 
     # avoid common problems before they occur
+    # principle: raise an error as soon as sth goes wrong
+    # this takes 3 particular form:
+        # checking inputs are correct
+        # avoid non-standard evaluation
+        # avoid functions that can return different types of output
 
-#
+
+#=========================
+# 9.1 Debugging techniques
+#=========================
+
+# productively debug a problem with print()
+# useful tools 
+# outline a general procedure for debugging
+
+# 4 steps:
+  # realise you have a code
+    # automated test for high quality of the paper
+
+  # make it repeatable
+    # once have a bug, be able to reproduce it on command
+    # binary search, repeatedly remove half of the code
+      # until you find the bug
+    # if it takes a long time to generate the bug, 
+      # also worthwhile to figure out how to generate it faster
+
+  # figure where it is
+  # figure it and test it
+      # have automated test in place
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

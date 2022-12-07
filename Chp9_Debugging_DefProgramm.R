@@ -71,6 +71,159 @@
 
 
 
+# browser():
+  # the function most similar to Rstudio debug
+  # will start an interactive console in the env where error occured
+  # Use options(error = browser) to turn it on,
+      # re-run the previous command
+  # then use options(error = NULL) to return to the default error behavior
+  
+
+# add browser() where you want execution to pause
+# breakpoints behave similarly to browser()
+  # but easier to set
+# 
+
+# same to adding browser() in the code, 
+  # two other functions will add to code
+
+# debug(): inserts a browser statement in the 1st line of the specified function
+# undebug() removes it
+# or use debugonce() to browse only on the next run
+
+
+utils::setBreakpoint()
+  # instead of taking function name, 
+   # it takes a file name, line number, and finds an appropriate function for you
+
+
+# These two functions are special case of trace()
+  # which inserts arbitrary code at any position in an existing function
+# To remove tracing from a function, use untrace()
+
+
+
+#=======================
+# 9.3 Condition handling
+#=======================
+
+# communication problems to users
+# three tools:
+  # try(): gives users ability to continue execution 
+            # even when an error occurs
+          
+  # tryCatch(): lets you specify handler functions that cntrol 
+            # what happens when a condition is signalled
+
+
+
+#-----------------------------
+# 9.3.1 Ignore errors with try
+#-----------------------------
+
+# try()
+  # allows execution to continue even after an error has occure
+
+f1 <- function(x) {
+  log(x)
+  10
+}
+
+f1("x")
+# Error in log(x) : non-numeric argument to mathematical function
+
+# but if wrap the statement that creates the error in try()
+  # the error message will be printed but execution will continue
+
+f2 <- function(x) {
+  try(log(x))
+  10
+}
+f2("a")
+# Error in log(x) : non-numeric argument to mathematical function
+# [1] 10
+
+# can suppress the message with try(..., silent = TRUE)
+
+# to pass larger blocks of code to try, wrap them in {}
+
+try({
+  a <- 1
+  b <- "x"
+  a + b
+})
+
+
+# capture the error of try function
+  # if successful, the last result evaluted in the block
+  # if unsuccessful, an invisble obj of class "try-error"
+
+success <- try(1 + 2)
+failure <- try("a" + "b")
+class(success)
+# [1] "numeric"
+
+class(failure)
+# [1] "try-error"
+
+
+
+## try()
+# particularly useful when applying a function to multiple elements in a list
+elements <- list(1:10, c(-1, 10), c(T, F), letters)
+results <- lapply(elements, log)
+
+results <- lapply(elements, function(x) try(log(x)))
+
+
+# no built-in function to test for the try-error class
+  # so define one
+
+# Then you can easily find locations of errors with sapply()
+# and extract the successes or look at the inputs that lead to failure
+
+is.error <- function(x) inherits(x, "try-error")
+success <- !sapply(results, is.error)
+
+results[success]
+str(results[success])
+
+# List of 3
+#$ : num [1:10] 0 0.693 1.099 1.386 1.609 ...
+#$ : num [1:2] NaN 2.3
+#$ : num [1:2] 0 -Inf
+
+
+# look at the inputs that failed
+str(elements[!success])
+# List of 1
+# $ : chr [1:26] "a" "b" "c" "d" ...
+
+
+# another useful trick try()
+  # using a default value if an expression fails
+
+# Simply assign the default value outside the try block
+default <- NULL 
+try(default <- read.csv("possibly-bad-input.csv", silent = TRUE))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

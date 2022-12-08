@@ -209,6 +209,92 @@ try(default <- read.csv("possibly-bad-input.csv", silent = TRUE))
 
 
 
+#----------------------------------------
+# 9.3.2 Handle conditions with tryCatch()
+#----------------------------------------
+
+# errors: made by stop()
+# warnings: made by warning()
+# messages: made by message()
+# interrupts: by ESC OR ctrol +C
+
+# tryCatch() map conditions to handlers
+  # which are named functions called with the condition as an input
+
+# when a condition is signaled,
+  # tryCatch() will call the first handler whose name matches one of the classes
+    # of conditions
+
+# built in names: 
+  # error, warning, message, interrupt, catch-all condition
+
+# a handler function can do anything  
+  # but will return a value or create a more informative error message
+
+
+# below function sets up handlers that return the type of condition signalled
+
+show_condition <- function(code) {
+  tryCatch(code, 
+           error = function(c) "error",
+           warning = function(c) "warning",
+           message = function(c) "message")
+}
+
+show_condition(stop("!"))
+# [1] "error"
+show_condition(warning("?!"))
+# [1] "warning"
+show_condition(message("??"))
+# [1] "message"
+
+# if no condition is captured, it returns the value of input
+show_condition(10)
+# [1] 10
+
+
+## Catching interrupts can be useful if want to 
+  # take special action when the user tries to abort running code
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

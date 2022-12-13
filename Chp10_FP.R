@@ -133,6 +133,69 @@ summary_3 <- function(x) {
 
 
 
+#==========================
+# 10.2 Anonymous functions
+#==========================
+
+# when create a function without giving a name
+  # it's an annonymous function
+install.packages("dplyr")
+library(dplyr)
+
+str(mtcars) # 'data.frame':	32 obs. of  11 variables:
+
+lapply(mtcars, function(x) length(unique(x)))
+
+Filter(function(x) !is.numeric(x), mtcars) # extract elements of a vector
+# data frame with 0 columns and 32 rows
+
+integrate(function(x) sin(x)^2, 0, 2*pi)
+
+
+## Anonymous functions have
+  # formals()
+  # body()
+  # a parent environment()
+
+formals(function(x = 4) g(x) + h(x))
+# $x
+#[1] 4
+
+body(function(x = 4) g(x) + h(x))
+# g(x) + h(x)
+
+environment(function(x = 4) g(x) + h(x))
+# <environment: R_GlobalEnv>
+
+
+## can call anonymous function without giving it a name
+# but the code is little tricky to read 
+  # need to use parentheses in two ways:
+    # 1st, to call a function
+    # 2nd, to make clear want to call the anonymous function itself
+
+
+(function(x) 3) # anonymous function
+# make clear want to call this anonymous function
+(function(x) 3)()
+# [1] 3
+
+(function(x) x + 3)(10)
+# [1] 13
+
+# behaves exactly as 
+f <- function(x) x + 3
+f(10)
+# [1] 13
+
+
+## one of the most common uses for anonymous functions
+  # is to creat clousers, a function made by other functions
+
+
+
+
+
 
 
 

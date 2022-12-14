@@ -194,6 +194,70 @@ f(10)
 
 
 
+#==============
+# 10.3 Closures
+#==============
+
+# closure get their names because
+  # they enclose the environment of the parent function
+  # and can access all its variables
+  # useful because it allows us to have two levels of parameters:
+    # a parent level that controls operation and 
+    # a child level that does the work
+
+
+# use this idea to generate a family of power functions
+  # a parent function (power()) creates two child functions
+    # square() and cube()
+  
+power <- function(exponent) {
+  function(x)
+    x^exponent
+}
+
+Square <- power(2)
+Cube <- power(3)
+
+# print out a closure
+Square
+# function(x)
+# x^exponent
+# <environment: 0x7fd9e02c83e0>
+
+Cube
+#function(x)
+#  x^exponent
+#<bytecode: 0x7fd9f104d288>
+#  <environment: 0x7fd9e4788dc8>
+
+# the difference is the enclosing environment
+environment(Square)
+# <environment: 0x7fd9e02c83e0>
+environment(Cube)
+# <environment: 0x7fd9e4788dc8>
+
+
+
+# the parent env of a closure is the execution env of the function
+  # that created it (upper level function). 
+
+# in R, all functions remeber the env in which they were created
+  # either global env or a package env
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -245,6 +245,138 @@ environment(Cube)
   # either global env or a package env
 
 
+#--------------------------
+# 10.3.1 Function factories
+#--------------------------
+
+# a factory for making new functions
+  # e.g., power()
+
+# useful for maximum likelihood problem
+
+
+#--------------------
+# 10.3.2 Mutable state
+#--------------------
+
+# having varaibles at two levels allow to maintain state
+  # across function invocations
+# when the execution env is refreshed every time, 
+  # the enclosing env is constant
+
+# the key to managing variables at different levels is
+  # <<-
+  # does not assign in the current evn
+    # but keep looking up the chain of parent envs
+    # it finds a matching name
+
+# a static parent env and <<- make it possible
+  # to maintain state across function calls
+
+# Example:
+new_counter <- function() { # create a new env to excuete below
+  i <- 0  # initiate i in this env
+  function() { # a new function whose parent env is new_counter's execution env
+    i <<- i + 1  # i will look up into its parent env 
+                 # and assign the value to the var in the parent that match the names
+    i
+  }
+}
+
+count_one <- new_counter()
+#   function() { # a new function whose parent env is new_counter's execution env
+        # i <<- i + 1  # i will look up into its parent env 
+        #  i
+#     }
+
+count_one()
+# [1] 1
+count_one()
+# [1] 2
+
+i <- 0
+count_1 <- function() { # a new function whose parent env is new_counter's execution env
+  i <<- i + 1  # i will look up into its parent env 
+  i   # i will be changed, since these change is in local enclosing env
+      # the changes to i will be preserved across all function calls. 
+}
+count_1()
+# [1] 1
+#> count_1()
+#[1] 2
+#> count_1()
+#[1] 3
+#> count_1()
+#[1] 4
+
+### the counters get around the "fresh start"
+  # by not modifying varaibles in their local env
+
+# since the changes in the i are made in the 
+  # unchanging enclosing env where inner function is created
+  # these local changes are preserved across function call
+
+
+
+new_counter3 <- function() {
+  i <- 0
+  function() {
+    i <- i + 1  # i just assign new value to the local and 
+                # won't be able to assign up the change 
+                # the the variable having the same name i
+                # so every call of new_counter3, 
+                # i start from 0, now changes from below
+    i
+  }
+}
+
+nc3_1 <- new_counter3()
+
+nc3_1()
+
+
+i <- 0
+nc <- function() {
+  i <- i + 1
+  i
+}
+nc()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

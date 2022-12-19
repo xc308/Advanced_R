@@ -344,8 +344,75 @@ nc()
 
 
 
+#========================
+# 10.4 Lists of functions
+#========================
+
+# functions can be stored in lists
+  # easier to work with groups of related functions
+  # like df is easier to work with groups of related vectors
 
 
+# example: comparing the performance of multiple ways of 
+  # computing arithmetic mean
+  # can do this by storing each approach (function) in a list
+
+compute_mean <- list(
+  base = function(x) mean(x),
+  sum = function(x) sum(x) / length(x),
+  manual = function(x) {
+    total <- 0
+    n <- length(x)
+    for (i in seq_along(x)) {
+      total <- total + x[i] / n
+    }
+    total
+  }
+)
+
+x <- runif(1e5)
+system.time(compute_mean[[1]](x))
+system.time(compute_mean[[2]](x))
+system.time(compute_mean[[3]](x))
+
+# to call each of the function
+lapply(compute_mean, function(f) f(x))
+# $base
+#[1] 0.5013672
+
+#$sum
+#[1] 0.5013672
+
+#$manual
+#[1] 0.5013672
+
+
+lapply(compute_mean, function(f) system.time(f(x)))
+
+
+## Another use of list of function:
+  # to summarise an obj in mulitple ways
+  # can store each summary function in a list
+  # then run them all with lapply()
+
+x <- 1:10
+funs <- list(
+  sum = sum,
+  mean = mean,
+  median = median
+)
+lapply(funs, function(f) f(x))
+# $sum
+#[1] 55
+
+#$mean
+#[1] 5.5
+
+#$median
+#[1] 5.5
+
+# want to remove the na at the same time
+lapply(funs, function(f) f(x, na.rm = T))
 
 
 

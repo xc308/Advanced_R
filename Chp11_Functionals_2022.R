@@ -45,7 +45,61 @@ randomise(sum)
 
 
 
+#==============
+# 11.1 lapply()
+#==============
 
+# apply a function onto each element of a list
+  # returns a list
+
+# essense of the lapply()
+lapply2 <- function(x, f, ...) {
+  x <- vector("list", length(x))
+  for(i in seq_along(x)){
+    out[[i]] <- f(x[[i]],...)
+  }
+  out
+}
+
+## other functionals are just variations of this theme:
+  # they just use different types of input and output
+
+l <- replicate(20, runif(sample(1:10, 1)), simplify = F)
+str(l)
+# List of 20
+
+# with a for loop
+out <- vector("list", length(l))
+for(i in seq_along(l)) {
+  out[[i]] <- length(l[[i]])
+}
+unlist(out)
+
+
+# with lapply
+unlist(lapply(l, length)) 
+# from list output to a vector to make it more compact
+
+# since dfs are also list
+# lapply is useful when want to do something to each col of df
+
+
+# what class is each col of mtcars
+unlist(lapply(mtcars, class))
+
+# divide each col by mean
+mtcars[] <- lapply(mtcars, function(x) x / mean(x))
+str(mtcars)
+
+
+## Note that in lapply(x, f, ...) 
+  # each picecs of x are always supplied as the 1st arg of f
+
+# example: vary the amount of trim when computing mean(x)
+trims <- c(0, 0.1, 0.2, 0.5)
+x <- rcauchy(1000)
+unlist(lapply(trims, function(trim) mean(x, trim = trim)))
+# each piece of x is the first arg of function()
 
 
 

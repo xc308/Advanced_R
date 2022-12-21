@@ -103,6 +103,46 @@ unlist(lapply(trims, function(trim) mean(x, trim = trim)))
 
 
 
+#========================
+# 11.1.1 looping patterns
+#========================
+
+# 3 ways to loop over a vector:
+  #1. loop over the elements: for (x in xs)
+  #2. loop over the numeric indices: for (i in seq_along(xs))
+  #3. loop over the names: for (nm in names(xs))
+
+# 1. not good: inefficient ways of saving output
+  #  as has to copy all of the existing elements of the vector
+    # then expand it with new element
+
+# more efficient way is to create a space for the desired output
+  # then fill it in. 
+# so the 2nd form is the easier way
+xs <- runif(1e3)
+res <- numeric(length(xs))  # create a double-precision vector
+for (i in seq_along(xs)) {
+  res[i] <- sqrt(xs[i])
+  }
+
+
+## 3 basic ways for lapply()
+# 1. lapply(xs, function(x) {})
+# 2. lapply(seq_along(xs), function(i) {})
+# 3. lapply(names(xs), function(nm) {})
+
+# normally use the 1st one, 
+  # but when what to know the position or name of the element
+  # work with the 2nd and 3rd
+
+
+
+
+
+
+
+
+
 
 
 

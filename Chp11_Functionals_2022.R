@@ -275,6 +275,75 @@ function(x, f, f.value, ...) {
 
 
 
+#=========================================
+# 11.2.2 Multiple inputs: Map ( and mapply)
+#=========================================
+
+# With lapply(), 
+  # only one argument to the function can vary
+  # the others are fixed
+
+# situation: when have two lists, one is obs
+  # the other is weight
+
+# want to know the weighted mean
+
+xs <- replicate(5, runif(10), simplify = F)
+str(xs)
+# List of 5
+# $ : num [1:10] 0.319 0.438 0.744 0.715 0.445 ...
+# $ : num [1:10] 
+
+ws <- replicate(5, rpois(10, 5) + 1, simplify = F)
+
+# for unweighted mean
+unlist(lapply(xs, mean))
+
+weigthed.mean()
+
+# can do
+
+unlist(lapply(seq_along(xs), function(i) {
+  weighted.mean(xs[[i]], ws[[i]])
+}))
+
+# but more neat method is 
+
+unlist(Map(weighted.mean, xs, ws))
+
+# can convert Map to lapply that iterates over indices
+
+# Map is useful when have two or more lists or a data frames
+# that need to process in parallel. 
+
+# e.g. standardising columns
+  # 1st compute the mean, then divide by them
+  # can do this with lapply but better to do each step
+
+mtmeans <- lapply(mtcars, mean)
+str(mtmeans)
+Map("/", mtcars, mtmeans)
+
+
+# or 
+mtcars[] <- lapply(mtcars, function(x) x / mean(x))
+str(mtcars)
+
+
+# if some arg of the function should be fixed, 
+  # then use anonymous function in the Map
+
+Map(function(x, w) weighted.mean(x, w, na.rm = T), xs, ws)
+
+
+
+
+
+
+
+
+
+
 
 
 

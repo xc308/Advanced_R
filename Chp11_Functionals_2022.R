@@ -337,6 +337,81 @@ Map(function(x, w) weighted.mean(x, w, na.rm = T), xs, ws)
 
 
 
+#============================
+# 11.2.3 Rolling computations
+#============================
+
+# need a for loop replacement not exist in R
+  # can create your own by recognising common looping structures
+  # implementing your own wraper
+
+# smoothing your data using a rolling mean function;
+
+rollmean <- function(x, n) {
+  out <- rep(NA, length(x))
+  ofset <- trunc(n / 2) # take int part
+  for (i in (ofset + 1):(length(x) - n + ofset + 1)){
+    out[i] <- mean(x[(i - ofset):(i + ofset - 1)])
+  }
+  out
+}
+
+x <- seq(1, 3, length = 1e2) + runif(1e2)
+plot(x)
+
+lines(rollmean(x, 5), col = "blue", lwd = 2)
+lines(rollmean(x, 10), col = "red", lwd = 3)
+
+# but when noise is more variable, will worry rolling mean
+  # is too sensitive to outliers
+  # will compute a rolling mean instead
+
+rollapply <- function(x, n, f, ...) {
+  out <- rep(NA, length(x))
+  ofset <- trunc(n/2)
+  for (i in (ofset + 1):(length(x) - n + ofset + 1)) {
+    out[i] <- f(x[(i - ofset):(i + ofset)], ...)
+  }
+  out
+}
+
+plot(x)
+lines(rollapply(x, 5, median), col = "red", lwd = 2)
+
+# internal structure is looks like vapply
+# so modify inner for loop
+
+roll_apply <- function(x, n, f, ...) {
+  ofset <- trunc(n/2)
+  loc <- (ofset + 1):(length(x) - n + ofset + 1)
+  num <- vapply(loc, 
+         function(i) f(x[(i - ofset):(i + ofset)], ...),
+         numeric(1))
+  #num
+  c(rep(NA, ofset), num)
+}
+roll_apply(x, 5, median)
+#  [1]       NA       NA 1.616686 1.664508
+# [5] 1.734135 1.790946 1.899057 1.969393
+
+# the same as zoo::rollapply()
+# provide more features and more error checking
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

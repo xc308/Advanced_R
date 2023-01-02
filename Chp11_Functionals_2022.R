@@ -400,6 +400,85 @@ roll_apply(x, 5, median)
 
 
 
+#=======================
+# 11.2.4 Parallelisation
+#=======================
+
+# lapply() each iteration is isolated from others
+  # the order in which they are computed doesn't matter
+
+# Example: scramble the order of computation doesn't matter
+lapply3 <- function(x, f, ...) {
+  out <- vector("list", length(x))
+  for (i in sample(seq_along(x))) {
+    out[[i]] <- f(x[[i]], ...)
+  }
+  out
+}
+
+unlist(lapply3(1:10, sqrt)) == unlist(lapply(1:10, sqrt))
+# [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+# [8] TRUE TRUE TRUE
+# the same
+
+# since we can compute each element in a list in any order
+  # it's easy to dispatch the tasks to differnt cores
+  # and compute them in parallel
+
+# parallel::mclapply() and parallel::mcMap()
+
+library(parallel)
+system.time(unlist(mclapply(1:10, sqrt, mc.cores = 4)))
+#user  system elapsed 
+#0.004   0.026   0.023
+system.time(unlist(lapply(1:10, sqrt)))
+# user  system elapsed 
+# 0       0       0 
+# this case multi-core is slow due to need to 
+  # assign to cores, and to collect the results from each of them
+
+
+# but if more practical examples:
+  # generating bootstrap replicates of a linear model
+
+boot_df <- function(x) x[sample(nrow(x), replace = T), ]
+rsqured <- function(mod) summary(mod)$r.square
+boot_lm <- function(i) {
+  rsquared(lm(mpg ~ wt + disp, data = boot_df(mtcars)))
+}
+
+system.time(lapply(1:500, boot_lm))
+#  user  system elapsed 
+# 0.321   0.004   0.333 
+
+system.time(mclapply(1:500, boot_lm, mc.cores = 3))
+# user  system elapsed 
+# 0.002   0.016   0.265 
+
+system.time(mclapply(1:500, boot_lm, mc.cores = 2))
+#    user  system elapsed 
+# 0.001   0.012   0.303 
+
+# while increasing the number of cores will not always 
+# lead to linear improvement
+# switching from lapply() and Map() to mclapply() mcMap()
+  #  to paralle the computation can dramatically improve
+  # computational performance. 
+
+
+
+nrow(mtcars) # 32
+sample(nrow(mtcars)) 
+# generate row index [1]  9  3  8 21 31 19 29 25 30 18 12 10
+#[13]  2  1 26 27 28 13  5 15 16  6  4 20
+#[25] 17 32 22 11 23 24 14  7
+#x[sample(nrow(mtcars)), ] to extract these rows
+
+
+
+
+
+
 
 
 

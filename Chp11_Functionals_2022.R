@@ -476,6 +476,162 @@ sample(nrow(mtcars))
 
 
 
+#==================================
+# 11.3 Manipulating matrices and df
+#==================================
+
+# functional can eliminate loops
+# 3 categories of data structure functionals:
+  # apply(), sweep(), outer() for matrices
+  # tapply() summarise a vector by groups defined by another vector
+  # plyr package, generalise tapply() to make it easy to work with
+    # df, lists, arrays as inputs
+    # and df, lists or arrays as outputs
+
+
+#-----------------------------------
+# 11.3.1 Matrix and array operations
+#-----------------------------------
+
+# apply(), sweep(), outer() works with high-dim data structure
+  # apply(): a variant of sapply() works with matrices and arrays
+    # 1. an operation that summarises a matrix or array 
+      # by collapsing each row or col to a single number
+    # 2. has 4 args:
+      # X: matrix or array to summarise
+      # MARGIN: int vector giving dim to summarize over
+        # 1 = rows
+        # 2 = cols
+      # FUN: summarise functions
+      # ... other arg to pass into FUN
+
+# example:
+a <- matrix(1:20, nrow = 5) 
+#      [,1] [,2] [,3] [,4]
+# [1,]    1    6   11   16
+# [2,]    2    7   12   17
+# [3,]    3    8   13   18
+# [4,]    4    9   14   19
+# [5,]    5   10   15   20
+apply(a, 1, max)
+# [1] 16 17 18 19 20
+apply(a, 2, max)
+# [1]  5 10 15 20
+
+# Remark:
+  # not completely sure what type of output you'll get
+    # so not safe to use inside a function
+  # not idempotent if summary function is identity operator
+    # the output is not always the same as input
+
+a1 <- apply(a, 1, identity)
+#     [,1] [,2] [,3] [,4] [,5]
+# [1,]    1    2    3    4    5
+# [2,]    6    7    8    9   10
+# [3,]   11   12   13   14   15
+# [4,]   16   17   18   19   20
+
+identical(a, a1)
+# [1] FALSE
+
+a2 <- apply(a, 2, identity)
+identical(a2, a) # [1] TRUE
+
+
+## sweep()
+  # sweep out the values of a summary statistic
+  # often used with apply() to standardise arrays
+
+  # x: array or matrix
+  # MARGIN: 1= rows; 2=cols
+  # STATS: the summary statistic to be sweep out
+  # FUN: the function used to carry out sweep
+
+x <- matrix(1:20, nrow = 4)
+#     [,1] [,2] [,3] [,4] [,5]
+#[1,]    1    5    9   13   17
+#[2,]    2    6   10   14   18
+#[3,]    3    7   11   15   19
+#[4,]    4    8   12   16   20
+x1 <- sweep(x, 1, apply(x, 1, min), "-")
+#    [,1] [,2] [,3] [,4] [,5]
+#[1,]    0    4    8   12   16
+#[2,]    0    4    8   12   16
+#[3,]    0    4    8   12   16
+#[4,]    0    4    8   12   16
+# each row of x "minus" the min of each row
+
+
+sweep(x1, 1, apply(x1, 1, max), "/")
+#      [,1] [,2] [,3] [,4] [,5]
+#[1,]    0 0.25  0.5 0.75    1
+#[2,]    0 0.25  0.5 0.75    1
+#[3,]    0 0.25  0.5 0.75    1
+#[4,]    0 0.25  0.5 0.75    1
+# each row of x "/" the max of each row of x1
+
+
+# one more example:
+x <- matrix(rnorm(20, 0, 10), nrow = 4)
+
+x1 <- sweep(x, 1, apply(x, 1, min), "-")
+sweep(x1, 1, apply(x1, 1, max), "/")
+
+
+
+## outer
+  # takes multiple vector inputs
+  # create a matrix or array output 
+      # where input function is run over all combination of the inputs
+outer(1:3, 1:10, "*")
+# 1*1, 1*2, 1*3, ...1*10
+# 2*1, 2*2, 2*3, ...2*10
+# 3*1, 3*2, 3*3, ...3*10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

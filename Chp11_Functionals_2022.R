@@ -590,13 +590,58 @@ outer(1:3, 1:10, "*")
 
 
 
+#--------------------
+# 11.3.2 Group apply
+#--------------------
 
+# tapply() a generalisation to apply()
+  # where raged arrays i.e., each row can have different number of cols
+  # often needed when try to summarise a data set
 
+# Example
+  # collected pulse rate data from medical trial
+  # want to compare two groups:
 
+rep(c(0, 5), c(10, 12))
+# [1] 0 0 0 0 0 0 0 0 0 0 5 5 5 5 5 5 5 5 5 5 5 5
+pulse <- round(rnorm(22, 70, 10/3)) + rep(c(0, 5), c(10, 12)) 
+str(pulse)
+# num [1:22] 69 70 72 74 71 73 68 70 74 6
 
+group <- rep(c("A", "B"), c(10, 12))
 
+tapply(X = pulse, INDEX = group, FUN = length)
+#  A  B 
+# 10 12 
 
+tapply(pulse, group, mean)
+#       A        B 
+# 71.00000 76.08333 
 
+## essentially a combination of split and sapply
+  # split() takes two inputs and returns a list
+    # that groups elements together from the 1st input arg
+    # according to the 2nd arg
+
+pulse_list <- split(pulse, group)
+# $A
+#[1] 69 70 72 74 71 73 68 70 74 69
+
+#$B
+#[1] 78 77 75 75 69 75 80 77 76 75 79 77
+
+sapply(pulse_list, mean)
+#      A        B 
+# 71.00000 76.08333
+
+tapply2 <- function(x, group, f, ..., simplify = T) {
+  pieces <- split(x, group)
+  sapply(pieces, f, simplify = simplify)
+}
+
+tapply2(pulse, group, mean)
+#        A        B 
+# 71.00000 76.08333
 
 
 

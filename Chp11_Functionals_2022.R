@@ -644,6 +644,106 @@ tapply2(pulse, group, mean)
 # 71.00000 76.08333
 
 
+#-----------------
+# The plyr package
+#-----------------
+
+# The split-apply-combine strategy for data analysis
+
+
+
+#=========================
+# 11.4 Manipulating lists
+#=========================
+
+# Another way to think about functionals is 
+  # a set of tools for altering, subsetting, and collapsing lists
+
+# Map()
+# Reduce()
+# Filter()
+
+#---------
+# Reduce()
+#--------
+
+# reduce a vector to a single value 
+  # by recursively calling a function f and two args at a time
+# it combines first two elements with f, 
+  # then combines the result of that call with 3rd element,...
+
+Reduce(f, 1:3) = f(f(1, 2), 3)
+# also known as fold, it fold together adjacent elements in the list
+
+Reduce(`+`, 1:3)
+# [1] 6
+
+# Reduce can deal with any number of inputs
+  # useful in implementing recursive operations, merges and intersections
+
+# e.g. have a list of numeric vectors, 
+  # want to find the values that occur in every element
+
+l <- replicate(5, sample(1:10, 15, replace = T), simplify = F)
+
+str(l)
+intersect(intersect(intersect(intersect(l[[1]], l[[2]]), l[[3]]), l[[4]]), l[[5]])
+#[1] 1 6 4
+
+# but too clummsy
+Reduce(intersect, l)
+# [1] 1 6 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

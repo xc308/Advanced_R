@@ -696,6 +696,104 @@ Reduce(intersect, l)
 
 
 
+#------------------------------
+# 11.4.2 Predicate functionals
+#------------------------------
+
+# A predicate is a function that returns a single T or F
+# like is.character, all, is.NULL
+
+# A predicate functional applies a predicate to each element
+  # of a list or df
+
+# 3 useful predicate functionals Filter(), Find(), Position()
+
+# Filter(): selects only those elements that match the predicate
+# Find(): returns the 1st element which matches the predicate 
+  # or last if right = TRUE
+
+# Position(): return the postion of the first element that matches
+  # the predicate or last if right = TRUE
+
+# where(): a custom functional that generates a logical vector
+  # from a list or a df and a predicate:
+
+where <- function(f, x) {
+  vapply(x, f, logical(1))
+}
+
+df <- data.frame(x = 1:3, y = c("a", "b", "c"), stringsAsFactors = T)
+df2<- data.frame(x = 1:3, y = letters[1:3])
+df3 <- data.frame(x = 1:3, y = c("a", "b", "c"), 
+                  z = letters[24:26],
+                  stringsAsFactors = T)
+identical(df, df2)
+# [1] TRUE
+
+where(f = is.factor, x = df)
+where(f = is.character, x = df2)
+#     x     y 
+# FALSE  TRUE 
+
+Filter(f = is.character, x = df)
+Filter(is.factor, df)
+#   y
+#1 a
+#2 b
+#3 c
+
+str(Filter(f = is.factor, x = df))
+# 'data.frame':	3 obs. of  1 variable:
+# $ y: Factor w/ 3 levels "a","b","c": 1 2 3
+
+
+Find(is.factor, df)
+# [1] a b c
+# Levels: a b c
+
+str(Find(is.factor, df))
+# Factor w/ 3 levels "a","b","c": 1 2 3
+
+# df is still a list, so the 1st element is still variable y
+
+Position(is.factor, df)
+# [1] 2
+# the 2nd element of a list (df)
+
+
+str(Filter(is.factor, df3))
+# 'data.frame':	3 obs. of  2 variables:
+# $ y: Factor w/ 3 levels "a","b","c": 1 2 3
+# $ z: Factor w/ 3 levels "x","y","z": 1 2 3
+
+str(Find(is.factor, df3))
+# only find the 1st elemtent that matches the predicate
+# [1] a b c
+# Levels: a b c
+# Factor w/ 3 levels "a","b","c": 1 2 3
+
+Find(is.factor, df3, right = T)
+# [1] x y z
+# Levels: x y z
+str(Find(is.factor, df3, right = T))
+# Factor w/ 3 levels "x","y","z": 1 2 3
+
+Position(is.factor, df3)
+# [1] 2
+Position(is.factor, df3, right = T)
+# [1] 3
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

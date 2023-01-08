@@ -784,6 +784,123 @@ Position(is.factor, df3, right = T)
 # [1] 3
 
 
+#==============================
+# 11.5 Mathematical functionals
+#==============================
+
+# limit, maximum, 
+# the roots where set of points st f(x) = 0
+# definite integrals
+# all functionals:
+  # given a function, they return a single number or vector of numbers
+
+# these all using an algorithm involves iteration
+
+# use some R built-in maths functionals
+# 3 functionals work with functions to returns a single numeric number
+
+  # integrate(): finds area under the curve defined by f()
+  # uniroot(): finds where f() = 0
+  # optimise(): finds the location of lowest (highest) value of f()
+
+# Example: how these 3 maths functionals work with sin() function
+
+integrate(f = sin, lower = 0, upper = pi)
+# 2 with absolute error < 2.2e-14
+
+Int <- integrate(f = sin, lower = 0, upper = pi)
+str(Int)
+# List of 5
+#$ value       : num 2
+#$ abs.error   : num 2.22e-14
+#$ subdivisions: int 1
+#$ message     : chr "OK"
+#$ call        : language integrate(f = sin, lower = 0, upper = pi)
+#- attr(*, "class")= chr "integrate"
+
+str(uniroot(f = sin, interval = pi * c(1/2, 3/2)))
+# List of 5
+#$ root      : num 3.14
+#$ f.root    : num 1.22e-16
+#$ iter      : int 2
+#$ init.it   : int NA
+#$ estim.prec: num 6.1e-05
+
+str(optimise(f = sin, interval = c(0, 2 * pi)))
+# List of 2
+#$ minimum  : num 4.71
+#$ objective: num -1
+# often used in MLE, 
+  # two sets of parameters: 
+    # data: fixed
+    # parameters: vary to find the maxim
+# combining closures with optimisation gives rise to 
+  # the following approach to solve MLE
+
+# Example: 
+  # show how we find MLE for lambda, the parameter in Poission Dis
+
+  # 1st: create a function factory, given a data set, 
+    # returns a function that computes the neg LogL for lambda
+# X ~ Poisson(lambda)
+# f(x) = (lambda^(x) * exp^(-lambda)) / x!
+# for n data x_i
+# joint distribution f(X) = Pi_{1}^{n} (lambda^(x) * exp^(-lambda)) / x!
+                    # f(X) = lambda^{sum_i x_i} + exp(- n * lambda)
+# logL propto sum_i x_i log(lambda) - n * lambda
+# - logL propto n * lambda - sum_i x_i log(lambda)
+
+
+poisson_nll <- function(x) {
+  n <- length(x)
+  sum_x <- sum(x)
+  function(lambda) {
+    n * lambda - sum_x * log(lambda)
+  }
+}
+
+# the clouser allows us to precompute the values that are 
+  # constant wrt the data
+
+
+x1 <- round(rnorm(10, 30, 5 ))
+x2 <- round(rnorm(12, 5, 3))
+
+nll_1 <- poisson_nll(x1)
+nll_2 <- poisson_nll(x2)
+
+optimise(f = nll_1, interval = c(0, 100))$minimum
+# $minimum
+# [1] 27.10001
+
+#$objective
+#[1] -623.1736
+
+optimise(f = nll_2, interval = c(0, 100))
+# $minimum
+#[1] 4.749994
+
+#$objective
+#[1] -31.81424
+
+# to check if the lambda after optimisation is correct or not
+  # since it's poisson, so optimised lambda = mean of the data
+
+mean(x1) # [1] 27.1
+mean(x2) # [1] 4.75
+
+## optim()
+  # a generalisation of optimise()
+    # deal with more than one dimension
+  # in Rvmmin package : provide pure R implementation
+  # Rvmmin is no slower than optim(), although it's written in R not C
+
+
+
+
+
+
+
 
 
 

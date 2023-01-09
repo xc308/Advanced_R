@@ -862,12 +862,26 @@ poisson_nll <- function(x) {
 # the clouser allows us to precompute the values that are 
   # constant wrt the data
 
+str(poisson_nll)
+
 
 x1 <- round(rnorm(10, 30, 5 ))
 x2 <- round(rnorm(12, 5, 3))
 
 nll_1 <- poisson_nll(x1)
+
+# function(lambda) {
+#     n * lambda - sum_x * log(lambda)
+#}
+#<environment: 0x7fd9f0a142b0>
+
 nll_2 <- poisson_nll(x2)
+# function(lambda) {
+#     n * lambda - sum_x * log(lambda)
+#}
+# <bytecode: 0x7fd9f289e718>
+# <environment: 0x7fd9e79fdae8>
+
 
 optimise(f = nll_1, interval = c(0, 100))$minimum
 # $minimum
@@ -894,6 +908,71 @@ mean(x2) # [1] 4.75
     # deal with more than one dimension
   # in Rvmmin package : provide pure R implementation
   # Rvmmin is no slower than optim(), although it's written in R not C
+
+
+
+#=======================================
+# 11.6 Loops that should be left as is
+#=======================================
+
+# some loops have no natural functional equivalent
+# 3 common cases:
+  # modifying in place
+  # recursive functions
+  # while loops
+
+
+#--------------------------
+# 11.6.1 Modifying in place
+#--------------------------
+
+# if just want to modify part of an existing data frame
+  # better to use for loop
+
+# Example: performs variable by variable transformation
+  # by matching the names of a list of functions to
+  # the names of variables in a data frame
+
+trans <- list(
+  disp = function(x) x * 0.016,
+  am = function(x) factor(x, levels = c("auto", "manual"))
+)
+
+for (var in names(trans)) {
+  mtcars[[var]] <- trans[[var]](mtcars[[var]])
+}
+
+trans[["disp"]] # a function
+(mtcars[["disp"]]) # print the values of 
+str(mtcars)
+
+trans[["disp"]](mtcars[["disp"]]) 
+# apply the function in the list on the printed data
+
+trans[["am"]](mtcars[["am"]])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

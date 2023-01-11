@@ -2,7 +2,7 @@
 # Chapter 11 Functionals
 #^^^^^^^^^^^^^^^^^^^^^^^^
 
-=^.^=
+
   
 # A higher-order function is a function that takes
     # a function as an input or returns a function as output
@@ -950,6 +950,165 @@ trans[["disp"]](mtcars[["disp"]])
 # apply the function in the list on the printed data
 
 trans[["am"]](mtcars[["am"]])
+
+
+#------------------------------
+# 11.6.2 Recursive relationships
+#------------------------------
+
+# hard to convert a for loop into a functional when 
+  # the relationship btw elements is not independent. 
+
+# Example: 
+  # exponential smoothing works by taking average of the 
+    # current and previous data points
+
+exp_smooth <- function(x, alpha) {
+  s <- numeric(length(x) + 1) # double presion float point
+  for (i in seq_along(s)) {
+    if (i == 1) {
+      s[i] <- x[i]
+    } else {
+      s[i] <- alpha * x[i] + (1 - alpha) * s[i - 1]
+    }
+  }
+  s
+}
+
+x <- runif(6)
+exp_smooth(x, 0.5)
+
+# output at postion i depends on both the input and output 
+  # at position i-1
+
+
+#------------------
+# 11.6.3 while loop
+#------------------
+
+# keeps running until some condition is met
+
+i <- 0
+while(TRUE) {
+  if (runif(1) > 0.9) break
+  i <- i + 1
+}
+
+
+# while(TRUE) is an infinite loop as its condition is always true
+# but we can break it using return
+
+
+Fun <- function(n) {
+  i <- 0
+  while(TRUE) {
+    if (i > n) {
+      return(paste0("i is greater than ", n))
+      } else {
+        print (i)
+      }
+    i <- i + 1
+  }
+}
+
+Fun(6)
+
+
+## Rejection method (uniform envelope)
+# fx is non-zero only on [a, b], and fx ≤ k.
+# 1. sample X uniformly from [a, b]
+# 2. sample Y uniformly from [0, k] indepdent of X
+# so P(X, Y) is uniformly distributed in a rectangle [a, b]*[0, k]
+# Y > fx(x) then return X
+
+function(fx, a, b, k) {
+  while(TRUE) {
+    x <- runif(1, a, b)
+    y <- runif(1, 0, k)
+    if (fx(x) < y) return (x)
+  }
+}
+
+
+
+#=============================
+# 11.7 A family of functions
+#=============================
+# case study: use functionals to take simple building block
+  # and make it powerful and general
+
+# start with def a simple addition function
+# use functionals to extend it to summing multiple numbers
+# computing paralle and cummulative sums
+# summing across array dimensions
+
+
+add <- function(x, y) {
+  stopifnot(length(x) == 1, length(y) == 1,
+            is.numeric(x), is.numeric(y))
+  x + y
+}
+
+
+# takes this simple building block and extend it to do more
+# add an na.rm arg
+  # a helper function will make it easier
+    # if x is missing, return y,
+    # if y is missing , return x
+    # if both are missing, return identity
+
+
+na_rm <- function(x, y, identity) {
+  if (is.na(x) && is.na(y)){
+    identity
+  } else if (is.na(x)) {
+    y
+  } else {
+    x
+  }
+}
+
+na_rm(NA, 10, 0)
+# [1] 10
+
+na_rm(1, NA, 0)
+# [1] 1
+
+na_rm(NA, NA, 0)
+# [1] 0
+
+
+# now write an add() that can deal with missing values
+  # if needed
+
+add <- function(x, y, na.rm = F) {
+  if (na.rm = T && (is.na(x) || is.na(y))) na_rm(x, y, 0)
+    else x + y
+}
+
+add(10, NA) # with na.rm default = F
+  # go work with else
+# 10 + NA = NA
+
+add(10, NA, na.rm = T)
+  # with na.rm = T, work with na_rm(x, y, 0)
+# [1] 10
+
+add(NA, NA)
+# na.rm is default F
+  # work with else 
+# NA + NA = NA
+
+add(NA, NA, na.rm = T)
+# work work na_rm(x, y, 0)
+# 0
+
+
+
+
+
+
+
 
 
 

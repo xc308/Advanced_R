@@ -1104,19 +1104,43 @@ add(NA, NA, na.rm = T)
 # 0
 
 
+## extend to deal with more complicated inputs
+# more than 2 numbers
+add(add(1, 2), 3)
+# can be used using Reduce()
+r_add <- function(xs, na.rm = T){
+  Reduce(function(x, y) add(x, y, na.rm = na.rm), xs)
+}
 
+r_add(c(1, 3, 4))
+# [1] 8
 
+# test a few special cases
+r_add(NA, na.rm = TRUE)
 
+length(numeric())
+# [1] 0
 
+Reduce()
+  # if given a lenght one vector, it doesn't have anything to reduce
+    # so just returns the input
+  # if give it an input of length zero, 
+  # it returns NULL
 
+# to fix, use init arg of Reduce()
+# this is added to the start of every input vector
+# (initial value)
+r_add(c(1, 4, 10))
+# [1] 15
 
+r_add <- function(xs, na.rm = T) {
+  Reduce(function(x, y) add(x, y, na.rm = T), xs, init = 0) 
+}
 
-
-
-
-
-
-
+r_add(NA, na.rm = TRUE)
+# [1] 0
+r_add(numeric(), na.rm = T)
+# [1] 0
 
 
 

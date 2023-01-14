@@ -1143,20 +1143,87 @@ r_add(numeric(), na.rm = T)
 # [1] 0
 
 
+## want a vectorised version of add() 
+  # so can perform addition of two vectors of numbers in 
+  # element-wise fashion
+
+# can use Map(), or vapply() but neither is perfect
+# Map() returns a list, not a numeric vector
+  # so need to use simplify2array()
+  
+# vapply() returns a vector but requires us to loop over a set of indices
+vct_add1 <- function(x, y, na.rm = FALSE) {
+  stopifnot(length(x) == length(y), is.numeric(x), is.numeric(y))
+  if (length(x) == 0) return(numeric())
+  simplify2array(
+    Map(function(x, y) add(x, y, na.rm = na.rm), x, y)
+  )
+}
+
+vct_add2 <- function(x, y, na.rm = FALSE) {
+  stopifnot(length(x) == length(y), is.numeric(x), is.numeric(y))
+  if (length(x) == 0) return(numeric())
+  vapply(seq_along(x), function(i) add(x[i], y[i], na.rm = na.rm),
+         numeric(1))
+  
+}
+
+vct_add1(1:10, 1:10)
+# [1]  2  4  6  8 10 12 14 16 18 20
+vct_add1(numeric(0), numeric())
+vct_add1(c(1, NA), c(1, NA))
+# [1]  2 NA
+vct_add1(c(1, NA), c(1, NA), na.rm = T)
+# [1] 2 0
 
 
+### Another variant is cummulative sum
+# can use Reduce() by setting the accumulate arg to T
+
+# for compare-------------------
+r_add <- function(xs, na.rm = T){
+  Reduce(function(x, y) add(x, y, na.rm = na.rm), xs)
+}
+
+r_add(c(1, 3, 4))
+# [1] 8
+#---------------------
 
 
+c_add <- function(xs, na.rm = T) {
+  Reduce(function(x, y) add(x, y, na.rm = na.rm), xs, 
+         accumulate = T)
+}
+
+c_add(c(1, 3, 4))
+# [1] 1 4 8
+
+## equivalent to cumsum()
+cumsum(c(1,3, 4))
+# [1] 1 4 8
 
 
+###--
+# matrices data structure
+# sum across rows and cols
+# combination of add() and apply()
+add <- function(x, y, na.rm = F) {
+  if (na.rm = T && (is.na(x) || is.na(y))) na_rm(x, y, 0)
+  else x + y
+}
 
+row_sum <- function(x, na.rm = F){
+  apply(x, 1, add, na.rm = na.rm)
+}
 
+col_sum <- function(x, na.rm = F) {
+  apply(x, 2, add, na.rm = na.rm)
+}
 
-
-
-
-
-
+# together the row and col sum in one function
+arr_sum <- function(x, dim, na.rm = F) {
+  apply(x, dim, add, na.rm = na.rm)
+}
 
 
 

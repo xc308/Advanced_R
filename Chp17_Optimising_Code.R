@@ -119,6 +119,72 @@ lookup[["j"]]
 
 
 
+#-------------------
+# 17.7 Avoid copies
+#-------------------
+
+# slow source is growing an obj with a loop
+# when use c(), append(), cbind(), rbind(), paste()
+  # to create a bigger obj
+# R must first allocate space for the new obj
+# then copy the old obj to its new home
+
+
+# if repeate this many times, e.g., in a for loop, 
+  # can be quite expensive
+
+# example: 
+  # first generate random strings
+  # combine them either iteratively or with a loop
+  # using collapse() or in a single pass using paste()
+  # note the performance of collapse() gets worse as 
+    # number of string grows
+
+random_string <- function() {
+  paste(sample(letters, 50, replace = T), collapse = "")
+}
+
+rstring10 <- replicate(10, random_string())
+rstring100 <- replicate(100, random_string())
+
+collapse <- function(xs) {
+  out <- ""
+  for (x in xs) {
+    out <- paste0(out, x)
+  }
+  out
+}
+
+str(rstring10)
+# chr [1:10] 
+#[1] "mnjaypwcwlymbvebmdmuzoruyapplraqqmmmmiuqosflabkvrb"
+#[2] "jiqxliulbydygstegqrlhesnzchrdiuyhbybbnabigvpxglqfl"
+#[3] "etbwwvbtonylitsdjjxwsxmtbledcpxsxsqkzbsgppefmkdkru"
+#[4] "ocikkpimpwmqzbezosgtxztzmamrnixkspgrtldhtvdvuhlybc"
+#[5] "geumcjlrnqpvjixnvtzmdzdelekrllqpwsrssfedtkkbdevrcy"
+
+microbenchmark(
+  loop10 <- collapse(rstring10),
+  loop100 <- collapse(rstring100),
+  vec10 <- paste(rstring10, collapse = ""),
+  vec100 <- paste(rstring100, collapse = "")
+  
+)
+
+
+# Unit: microseconds
+#expr     min
+#loop10 <- collapse(rstring10)  21.792
+#loop100 <- collapse(rstring100) 730.334
+#vec10 <- paste(rstring10, collapse = "")   4.459
+#vec100 <- paste(rstring100, collapse = "")  32.001
+#lq      mean   median       uq     max neval
+#22.584  23.15396  22.7920  23.1255  38.334   100
+#753.042 758.89774 755.3340 759.6465 833.417   100
+#4.667   5.38103   4.8135   5.0005  27.417   100
+#33.188  34.10773  33.7090  34.2295  47.917   100
+
+
 
 
 

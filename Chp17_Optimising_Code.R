@@ -186,6 +186,48 @@ microbenchmark(
 
 
 
+#-----------------------------
+# 17.8 Byte Code Compilation
+#-----------------------------
+
+# speed up using compiling
+
+lapply2 <- function(x, f, ...) {
+  out <- vector("list", length(x))
+  for (i in seq_along(x)) {
+   out[[i]] <- f(x[[i]], ...)
+  }
+  out
+}
+lapply2_cmpil <- compiler::cmpfun(lapply2)
+
+#compiler::cmpfun()
+  # provide a interfact to a byte code compiler for R
+
+x <- list(1:10, letters, c(F, T), NULL)
+microbenchmark(
+  lapply2(x, is.null),
+  lapply2_cmpil(x, is.null),
+  lapply(x, is.null)
+)
+
+# Unit: microseconds
+# expr   min    lq
+# lapply2(x, is.null) 2.209 2.334
+# lapply2_cmpil(x, is.null) 2.250 2.334
+# lapply(x, is.null) 1.667 1.793
+# mean median     uq      max neval
+# 29.45064 2.3760 2.4175 2707.834   100
+# 2.57272 2.3760 2.4180   18.542   100
+# 1.92268 1.8755 1.9385    5.917   100
+
+# compilation helps here,
+  # all R functions are byte code compiled
+  # by default
+
+
+
+
 
 
 

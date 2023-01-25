@@ -227,6 +227,73 @@ microbenchmark(
 
 
 
+#-----------------------
+# 17.9 Case study: t-test
+#------------------------
+
+# 1000 experiments (rows) 
+  # each collects data on 50 individuals (cols)
+
+# first 25 individuals in each row (exp) are grp 1
+# the 2nd 25 in each row (experiment) are grp2
+
+m <- 1000
+n <- 50
+X <- matrix(rnorm(m * n, mean = 10, sd = 3), nrow = m)
+grp <- rep(1:2, each = n/2)
+
+# two ways for t-test
+  # interface or
+  # two vectors
+
+
+system.time(for (i in 1:m) t.test(X[i, ] ~ grp)$stat)
+#   user  system elapsed 
+# 0.371   0.009   0.391 
+
+system.time(
+  for (i in 1:m) t.test(X[i, grp ==1], X[i, grp == 2])$stat
+)
+
+#   user  system elapsed 
+# 0.144   0.004   0.148 
+
+## interface is slower
+
+# can also build a function
+
+cmpT <- function(x, grp) {
+  t.test(x[grp == 1], x[grp == 2])$stat
+}
+
+system.time(t1 <- apply(X, 1, cmpT, grp = grp)) 
+# user  system elapsed 
+# 0.136   0.001   0.138 
+
+
+## to make this faster
+  # notice in stats:::t.test.default()
+  # it does more than just compute the t-statistic
+  # also computes the p-value and formats for print output
+
+# strip out these pieces to go faster
+
+View(stats:::t.test.default)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

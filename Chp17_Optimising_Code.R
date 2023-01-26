@@ -281,6 +281,103 @@ system.time(t1 <- apply(X, 1, cmpT, grp = grp))
 View(stats:::t.test.default)
 
 
+my_t <- function(x, grp) {
+  t_stat <- function(x) {
+    m <- mean(x)
+    n <- length(x)
+    var <- sum((x - m)^2) / (n - 1)
+    
+    list(m = m, n = n, var = var)
+  }
+  
+  g1 <- t_stat(x[grp == 1])
+  g2 <- t_stat(x[grp == 2])
+  
+  se_total <- sqrt(g1$var / g1$n + g2$var / g2$n)
+  (g1$m - g2$m) / se_total
+  
+}
+
+system.time(t2 <- apply(X, 1, my_t, grp = grp))
+#  user  system elapsed 
+# 0.038   0.002   0.046 
+
+system.time(t1 <- apply(X, 1, cmpT, grp = grp)) 
+# user  system elapsed 
+# 0.136   0.001   0.138 
+
+
+all.equal(t1, t2)
+# [1] TRUE
+stopifnot(all.equal(t1, t2))
+
+
+## can make it faster by vectorising it
+# instead of looping over the array outside the function
+# modify t_stat() to work with a matrix of values
+  # mean -> rMeans()
+  # length -> ncol()
+  # sum -> rowSums()
+
+rowstat <- function(X, grp) {
+  t_stat <- function(X) {
+    m <- rowMeans(X)
+    n <- ncol(X)
+    var <- rowSums((X - m)^2) / (n -1)
+    
+    list(m = m, n = n, var = var)
+  }
+  
+  g1 <- t_stat(X[, grp == 1])
+  g2 <- t_stat(X[, grp == 2])
+  
+  se_total <- sqrt(g1$var / g1$n + g2$var / g2$n)
+  
+  (g1$m - g2$m) / se_total
+
+}
+
+system.time(t3 <- rowstat(X, grp))
+# user  system elapsed 
+# 0.016   0.000   0.017 
+
+
+system.time(t2 <- apply(X, 1, my_t, grp = grp))
+#  user  system elapsed 
+# 0.038   0.002   0.046 
+
+system.time(t1 <- apply(X, 1, cmpT, grp = grp)) 
+# user  system elapsed 
+# 0.136   0.001   0.138 
+
+all.equal(t1, t3)
+# [1] TRUE
+
+## try byte code compilation 
+  # to see if can speed up again
+
+rowstat_compile <- compiler::cmpfun(rowstat)
+
+microbenchmark(
+  rowstat(X, grp),
+  rowstat_compile(X, grp),
+  unit = "ms"
+)
+
+# Unit: milliseconds
+# expr      min       lq
+# rowstat(X, grp) 7.630042 7.772543
+# rowstat_compile(X, grp) 7.621917 7.742126
+# mean   median       uq      max neval
+# 8.068398 7.891042 8.045355 14.85996   100
+#8.224489 7.893000 7.994042 18.28679   100
+> 
+# this example compiler does not help at all! 
+
+
+
+
+
 
 
 

@@ -375,6 +375,25 @@ microbenchmark(
 # this example compiler does not help at all! 
 
 
+  
+#=======================
+# 17. 10 Parallelisation
+#=======================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

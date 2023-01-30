@@ -371,7 +371,7 @@ microbenchmark(
 # mean   median       uq      max neval
 # 8.068398 7.891042 8.045355 14.85996   100
 #8.224489 7.893000 7.994042 18.28679   100
-> 
+ 
 # this example compiler does not help at all! 
 
 
@@ -379,12 +379,22 @@ microbenchmark(
 #=======================
 # 17. 10 Parallelisation
 #=======================
+library(parallel)
 
+cores <- detectCores()
+# [1] 10
 
+pause <- function(i) {
+  function(x) Sys.sleep(i)
+}
 
+system.time(lapply(1:10, pause(0.25)))
+#   user  system elapsed 
+# 0.025   0.018   2.513 
 
-
-
+system.time(mclapply(1:10, pause(0.25), mc.cores = cores))
+#user  system elapsed 
+#0.014   0.063   0.292 
 
 
 

@@ -181,6 +181,116 @@ object_size(rep("mark briers"), 10)
 
 
 
+#--------------------------------------
+# 18.2 Memo use and garbage collection
+#--------------------------------------
+
+install.packages("pryr")
+library(pryr)
+
+mem_used()
+# 289 MB
+
+# mem_change(code = for evaluation)
+# tells how memory changes during code execution
+# positive: increase in memory
+
+mem_change(zz <- 1e6)
+# 792 B
+mem_change(rm(zz))
+# -1.88 kB
+
+mem_change(NULL)
+# -3.01 kB
+
+## R use garbage collection (GC) for unused objs
+  # to return memory
+
+# R automatically releases memory when an obj is no longer used
+  # It does this by tracking how many names point to each obj
+  # and when no names pointing to an obj, 
+  # it deletes that obj
+
+
+# create a big obj
+mem_change(ss <- 1e6)
+# -34.4 kB
+
+# also point to 1e6 from yy
+mem_change(yy <- ss)
+# -1.91 kB
+
+mem_change(rm(ss))
+# 472 B
+
+# no name points to 1e6, memory is freed
+mem_change(rm(yy))
+# -1.67 kB
+
+## R will automatically call gc() itself whenever it needs to 
+  # more space
+
+# if you want to see what that is, 
+  # call 
+gcinfo(TRUE)
+# [1] FALSE
+
+
+## gc takes care of releasing objs that are no longer used
+# BUT i do need to aware of possible memory leaks
+
+# memory leaks occurs when you keep pointing to an obj
+  # w/o realising it
+
+# two main causes of memory leak
+  # fomulas
+  # closures
+# as they both capture the enclosing env
+
+# Examples:
+  # in f1(), 1e6 is only referenced inside the function
+  # why the function completes, the memory is returned
+  # the net memory change is 0
+
+  # in f2(), and f3()
+  # both return objs that capture environments
+  # so that x is NOT FREED when the function completes
+
+
+f1 <- function(){
+  x <- 1e6
+  10
+}
+
+mem_change(c <- f1())
+# -3.24 kB
+object_size(c)
+# 56 B
+
+
+f2 <- function(){
+  x <- 1e6
+  a ~ b
+}
+mem_change(d <- f2())
+# -4.94 kB
+object_size(d)
+# 896 B
+
+f3 <- function(){
+  x <- 1e6
+  function() 10
+}
+mem_change(g <- f3)
+# -9.92 kB
+object_size(g)
+# 3.81 kB
+
+
+
+
+
+
 
 
 

@@ -287,6 +287,139 @@ object_size(g)
 # 3.81 kB
 
 
+#---------------------------
+# 18.4 Modification in place
+#---------------------------
+x <- 1:10
+x[5] <- 10
+
+# two possibilities: 
+  # 1. R modifies x in place
+  # 2. R copies x to a new location, modifies the copy
+    # and then uses name x to point the new location
+
+# to explore, use two tools from pryr package
+  # address() : tell the variable location in memory
+  # refs(): tell how many names point to that location
+
+library(pryr)
+x <- 1:10
+address(x)
+# [1] "0x7f90366d76e0"
+refs(x)
+# [1] 65535
+
+y <- x
+
+c(address(y), refs(y))
+# [1] "0x7f90366d76e0" "65535" 
+
+# refs is just an estimate  
+  # can only differenciate between 1 and more than 1
+
+
+# when refs is 1
+  # modification will occur in place
+
+# when refs is more than 1
+  # R will make a copy, so other pointers to this obj
+    # is not affected
+
+
+# another useful function is tracemem()
+  # prints a message every time the traced obj is copied
+
+x <- 1:10
+tracemem(x)
+# [1] "<0x7f904647bb68>"
+# the current location in memory of obj x
+refs(x)
+# [1] 65 so will copy to a new location and modify and
+  # assign name x to the new location
+
+x[5] <- 6L
+#tracemem[0x7f904647bb68 -> 0x7f9020617d98]: 
+# it moved from and to 
+
+
+## Any primitive replacement function will modify in place
+  # includes [[<-, [<-, attributes<-, names<-, levels<-
+
+## all non-primitive functions increases refs.
+
+
+# to avoid copies, rewrite your funcion in C++
+
+
+#--------------
+# 18.4.1 Loops
+#--------------
+
+# loops in R is slow
+  # often because you modify a copy instead of 
+    # modify in place. 
+
+# example:
+x <- data.frame(matrix(runif(100 * 1e4), ncol = 100))
+Medians <- vapply(x, median, FUN.VALUE = numeric(1))
+# since df is a list, each col is an element in the list
+# vapply, each col of x go into the function median, 
+  # and get one numeic output
+  # so together 100 numeric
+str(Medians)
+# Named num [1:100]
+
+for(i in seq_along(Medians)) {
+  x[, i] <- x[, i] - Medians[i]
+ }
+
+# every iteration of the loop copies the df
+# to see this 
+system.time(for(i in 1:5) {
+  x[, i]<- x[, i] - Medians[i]
+  print(c(address(x), refs(x)))
+})
+#[1] "0x7f9015704080" "1"             
+#[1] "0x7f90157043d0" "1"             
+#[1] "0x7f9015704720" "1"             
+#[1] "0x7f9015704a70" "1"             
+#[1] "0x7f9035704080" "1"   
+
+# every time x is moved to a new location 
+  # because [<-.data.frame is NOT a primitive function
+
+# can make this substaintially efficient by using a list
+# instead of a data frame
+  # since modifying a list using primitive functions
+  # so all modifications will be in place
+
+y <- as.list(x)
+
+system.time(for(i in 1:5) {
+  y[[i]] <- y[[i]] - Medians[i]
+  print(c(address(y), refs(y)))
+})
+#[1] "0x7f90400e59f0" "1"             
+#[1] "0x7f90400e59f0" "1"             
+#[1] "0x7f90400e59f0" "1"             
+#[1] "0x7f90400e59f0" "1"             
+#[1] "0x7f90400e59f0" "1" 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

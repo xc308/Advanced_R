@@ -76,9 +76,11 @@ add(1, 2, 3)
 one <- function() 1L
 
 # equivalent C++
-int one() {
+
+cppFunction('int one() {
   return 1;
-}
+}')
+
 
 # compile this C++ from R
 cppFunction('int one() {
@@ -99,12 +101,77 @@ cppFunction('int one() {
     # NumericVector, IntegerVector, CharacterVector, LogicalVector
 
 
+#----------------------------------
+# 19.1.2 Scalar input, scalar output
+#----------------------------------
+
+# a scarlar version of sign() function
+  # that returns 1 if input is postive
+    # and -1 if input is negative
+
+signR <- function(x) {
+  if (x > 0) {
+    1
+  } else if (x == 0) {
+    0
+  } else {
+    -1
+  }
+}
+
+
+
+signR <- function(x) {
+  if (x > 0) {
+    1
+  } else if (x == 0) {
+    0
+  } else {
+    -1
+  }
+}
+
+
+cppFunction('int signC(double x) {
+  if (x > 0) {
+    return 1;
+  } else if (x == 0) {
+    return 0;
+  } else (x < 0) {
+    return -1;
+  }
+}')
 
 
 
 
 
+cppFunction('int signC(double x) {
+  if (x > 0) {
+    return 1;
+  } else if (x == 0) {
+    return 0;
+  } else {
+    return -1;
+  }
+}')
 
+
+cppFunction('int signC(double x) {
+  if (x > 0) {
+    return 1;
+  } else if (x == 0) {
+    return 0;
+  } else {
+    return -1;
+  }
+}')
+
+
+## declare each type of input as well as output type
+## as in R, can use break to exit the loop
+  ## but to skip one iteration, 
+    ## need to use continue instead of next in C
 
 
 

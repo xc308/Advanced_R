@@ -175,13 +175,139 @@ cppFunction('int signC(double x) {
 
 
 
+#----------------------------
+# Vector input, scalar output
+#----------------------------
+
+# the cost of loop is much smaller in C++
+
+sumR <- function(x) {
+  total <- 0
+  for (i in seq_along(x)) {
+    total <- total + x[i]
+  }
+  total
+}
+
+## in C++, loops has little cost
+# in 19.5, see alternatives to for loop that more clearly 
+  # express your intent
+  # not faster, but more clearer
 
 
+double sumC(NumericVector x) {
+  int n = x.size();
+  double total = 0;
+  
+  for (int i = 0; i < n; ++i) {
+    total += x[i];
+  }
+  return total;
+}
 
 
+cppFunction('double sumC(NumericVector x) {
+  int n = x.size();
+  double total = 0;
+  
+  for (int i = 0; i < n; ++i) {
+    total += x[i];
+  }
+  return total;
+}')
 
 
+sumR <- function(x) {
+  total <- 0
+  for (i in seq_along(x)) {
+    total <- total + x[i]
+  }
+  total  # a scalar
+}
 
+double sumC(NumericVector x) {
+  int n = x.size(); # method .size(), returns an integer
+  double total = 0;
+  
+  for (int i = 0; i < n; ++i) {
+    total += x[i];
+  }
+  return total;
+}
+
+cppFunction('double sumC(NumericVector x) {
+  int n = x.size(); // method .size() return integer
+  double total = 0;
+  
+  for (int i = 0; i < n; ++i) {
+    total += x[i];
+  }
+  return total;
+}')
+
+
+sumR <- function(x) {
+  total <- 0
+  
+  for (i in seq_along(x)) {
+    total <- total + x[i]
+  }
+  total
+}
+
+
+double sumC(NumericVector x) {
+  int n = x.size();
+  double total = 0;
+  
+  for (int i; i < n; ++i) {
+    total += x[i];
+  }
+  return total;
+}
+
+
+cppFunction('double sumC(NumericVector x) {
+  int n = x.size();
+  double total = 0;
+  
+  for (int i; i < n; ++i) {
+    total += x[i];
+  }
+  return total;
+}')
+
+
+## Remarks
+  # .size() is a C++ method, use . to call method in C++;
+  # syntax for for loop is for (init; check; increment):
+    # 1. initialised by creating a new variable i with value 0;
+    # 2. before each iteration, we check i < n
+       # terminate the loop if not
+    # 3. after each iteration, we increament the value of i by 1
+      # using prefix operator ++ which increase the value of i by 1
+
+  # In C++, Vector indices start at 0! so above 0, 1, 2, 3, 4, 
+  # In C++, Vector indices start at 0!
+  # In C++, Vector indices start at 0!
+  # common source of error when converting R to C++
+
+  # use = assign not <-
+
+  # += in place operators, -=, *=, /=
+
+x <- runif(1e3)
+microbenchmark::microbenchmark(
+  sum(x), # built-in so highly optimised
+  sumC(x),
+  sumR(x)
+)
+
+# Unit: microseconds
+#expr     min       lq      mean   median       uq     max
+#sum(x) 109.375 109.5430 109.99936 109.6465 109.8755 117.292
+#sumC(x)   1.917   2.0425   2.29686   2.1260   2.2090  10.750
+#sumR(x)  38.875  38.9590  39.15147  39.0005  39.0840  44.043
 
 
 

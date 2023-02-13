@@ -310,6 +310,79 @@ microbenchmark::microbenchmark(
 #sumR(x)  38.875  38.9590  39.15147  39.0005  39.0840  44.043
 
 
+#-----------------------------------
+# 19.1.4 Vector input, vector output
+#-----------------------------------
+
+# compute Euclidean distance between a value and a vector of values
+# 
+pdistR <- function(x, ys) {
+  sqrt((x - ys)^2)
+}
+
+# x is a scalar and ys is a vector
+
+NumericVector pdistC(double x, NumericVector ys){
+  int n = ys.size();
+  NumericVector out(n);
+  
+  for (int i = 0; i < n; ++i) {
+    out[i] = sqrt(pow(ys[i] - x, 2.0));
+  }
+  return out;
+}
+
+
+NumericVector pdistC(double x, NumericVector ys) {
+  int n = ys.size();
+  NumericVector out(n); // a new numeric vector of length n
+  
+  for (int i = 0; i < n; ++i) {
+    out[i] = sqrt(pow(ys[i] - x, 2.0)); //pow() for exponentiation
+  }
+  return out;
+}
+
+cppFunction('NumericVector pdistC(double x, NumericVector ys) {
+  int n = ys.size();
+  NumericVector out(n);
+  
+  for (int i = 0; i < n; ++i) {
+    out[i] = sqrt(pow(ys[i] - x, 2.0));
+  }
+  return out;
+}')
+
+
+x <- 1
+ys <- runif(1e4)
+microbenchmark::microbenchmark(
+  pdistR(x, ys),
+  pdistC(x, ys)
+)
+
+# Unit: microseconds
+# expr    min      lq     mean median
+# pdistR(x, ys) 26.793 42.2925 59.80900 42.688
+# pdistC(x, ys)  7.459 23.4590 30.68529 23.959
+# uq      max neval
+# 43.605 1720.834   100
+# 24.605  571.543   100
+
+
+## Remark:
+  # R is already vectorized version, so is fast
+  # but C++ is faster 
+  # due to memory allocation 
+  # R needs to create an intermidiate vector the same
+    # length as y, and allocating memory is expensive.
+
+
+
+
+
+
+
 
 
 

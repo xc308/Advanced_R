@@ -379,8 +379,93 @@ microbenchmark::microbenchmark(
 
 
 
+#-----------------------------------
+# 19.1.5 Matrix input, vector output
+#-----------------------------------
+
+# each vector type has a matrix equivalent:
+  # NumericMatrix
+  # IntegerMatrix
+  # CharacterMatrix 
+  # LogicalMatrix
 
 
+# Example: rowSums()
+
+NumericVector rowSumsC(NumericMatrix x) {
+  int nrow = x.nrow();
+  int ncol = x.ncol();
+  NumericVector out(nrow);
+  
+  for (int i = 0; i < nrow; ++i) {
+    double total = 0;    // initialse a double scalar, allocate memory
+    for (int j = 0; j < ncol; ++j) {
+      total += x(i, j);
+    }
+    out[i] = total;
+  }
+  return out;
+}
+
+
+NumericVector rowSumsC(NumericMatrix x) {
+  int nrow = x.nrow();
+  int ncol = x.ncol();
+  NumericVector out(nrow);
+  
+  for (int i = 0; i < nrow; ++i) {
+    double total = 0;
+    for (int j = 0; j < ncol; ++j) {
+      total += x(i, j); //matrix indexing using ()
+    }
+    out[i] = total; // vector indexing using []
+  }
+  return out;
+}
+
+
+library(Rcpp)
+cppFunction('NumericVector rowSumsC(NumericMatrix x) {
+  int nrow = x.nrow();
+  int ncol = x.ncol();
+  NumericVector out(nrow);
+  
+  for (int i = 0; i < nrow; ++i) {
+    double total = 0;    // initialse a double scalar, allocate memory
+    for (int j = 0; j < ncol; ++j) {
+      total += x(i, j);
+    }
+    out[i] = total;
+  }
+  return out;
+}')
+
+
+set.seed(14-02-2023)
+smp <- sample(100)
+head(smp)
+str(smp)
+
+M <- matrix(sample(100), nrow = 10)
+rowSums(M)
+rowSumsC(M)
+
+microbenchmark::microbenchmark(
+  rowSums(M),
+  rowSumsC(M)
+)
+
+# Unit: microseconds
+#expr    min     lq     mean
+#rowSums(M) 11.792 11.959 12.33280
+#rowSumsC(M)  1.459  1.667  9.97396
+#median      uq     max neval
+#12.167 12.3135  27.418   100
+#1.834  1.9590 810.709   100
+
+## Remarks:
+  # use () to index a matrix in C++;
+  # use .nrow(), .ncol() to get the dimension of a matrix;
 
 
 

@@ -468,6 +468,122 @@ microbenchmark::microbenchmark(
   # use .nrow(), .ncol() to get the dimension of a matrix;
 
 
+# revise rowSums function
+NumericVector rowSumsC(NumericMatrix x) {
+  int nrow = x.nrow();
+  int ncol = x.ncol();
+  NumericVector out(nrow);
+  
+  for (int i = 0; i < nrow; ++i) {
+    double total = 0;
+    for (int j = 0; j < ncol; ++j) {
+      total += x(i, j)
+    }
+    out[i] = total;
+  }
+  return out;
+}
+
+library(Rcpp)
+
+cppFunction('NumericVector rowSumsC(NumericMatrix x) {
+  int nrow = x.nrow();
+  int ncol = x.ncol();
+  NumericVector out(nrow);
+  
+  for (int i = 0; i < nrow; ++i) {
+    double total = 0;
+    for (int j = 0; j < ncol; ++j) {
+      total += x(i, j)
+    }
+    out[i] = total;
+  }
+  return out;
+}')
+
+
+
+#------------------------
+# 19.1.6 Using sourceCpp
+#------------------------
+
+# cppFunction in package "Rcpp" is inline C++;
+# But real problems, 
+  # simpler to use stand-alone C++ file, 
+    # then source them into R using sourceCpp();
+
+  # takes advantage of text editor for C++ files
+
+# Stand-alone C++ file should 
+  # have extension .cpp
+  # needs to start with :
+      #  #include <Rcpp.h>
+      #  using namespace Rcpp;
+
+# And for each function that you want available within R
+  # need to prefix it with:
+    #
+    # //[[Rcpp::export]]
+
+    # Note: the space above //[[Rcpp::export]] is mandatory;
+    # Rcpp::export controls whether a function is 
+      # export from C++ to R
+
+
+# can embed R code in special C++ comment blocks
+  # convenient to run test code
+
+/*** R
+# This is R code
+*/
+
+# the R code is run with source(echo = TRUE)
+  # so don't need to print output explicitly
+  
+  
+# To compile C++ code, 
+  # use sourceCpp("path/to/file.cpp")
+  
+  # this will create the matching R functions
+  # and add them to your current session. 
+  
+# These functions can NOT be saved in a .Rdata file
+  # and re-loaded later session; 
+
+# they must be recreated each time you restart R
+
+# e.g., running sourceCpp() on the following file
+  # implements mean function in C++
+    # then compares it to the built-in mean(); 
+
+
+sourceCpp(file = "Fun_mean.cpp")
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

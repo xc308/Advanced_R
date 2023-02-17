@@ -561,7 +561,20 @@ sourceCpp(file = "Fun_mean.cpp")
 
 
 
+#--------------
+# 19.2 Attributes and other classes
+#--------------
 
+# all R objs have attributes
+  # queried and modified with .attr()
+
+# Rcpp provides .names() as an alias for the name attribute
+
+# The use of ::create(), is a class method
+  # allows you to create an R vector from C++ scalar values
+
+library(Rcpp)
+sourceCpp(file = "Fun_attribs.cpp")
 
 
 

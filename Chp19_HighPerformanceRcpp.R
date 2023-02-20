@@ -577,6 +577,46 @@ library(Rcpp)
 sourceCpp(file = "Fun_attribs.cpp")
 
 
+#------------------------------
+# 19.2.1 Lists and data frames
+#------------------------------
+
+# Rcpp also provides classes List and DataFrame
+# more useful for output than input
+  # as List and DataFrame can contain arbitrary classes 
+    # but C++ needs to know their classes in advance
+
+# if the list has known structure e.g., S3 obj
+  # can extract the components and manually convert them 
+     # to their C++ equivalents with as()
+
+
+# Example: 
+  # object created by S3 lm(), 
+  # show C++ work with S3 obj 
+    # to extract the mean percentage error (mpe()) of a linear model
+  # .inherits() and stop() to check the obj is really a linear model
+
+
+library(Rcpp)
+sourceCpp("Extract_S3_convert_to_C++.cpp")
+# mod <- lm(mpg ~ wt, data = mtcars)
+#> mpe(mod)
+#[1] -0.01541615
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

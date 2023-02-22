@@ -605,6 +605,46 @@ sourceCpp("Extract_S3_convert_to_C++.cpp")
 #[1] -0.01541615
 
 
+#--------------------
+# 19.3 Missing Values
+#--------------------
+
+# working with missing values
+  # two things:
+  # how R's missing values behave in C++'s scalars (double)
+  # how to get and set missing values in vectors (NumericVector)
+
+## Scalars
+# take one of R's missing values, 
+  # coerce it into a scalar in C++, 
+    # then coerce back to an R vector
+
+library(Rcpp)
+sourceCpp("R_Missing_C++.cpp")
+# > str(scalar_missings())
+# List of 4
+# $ : int NA
+# $ : chr NA
+# $ : logi TRUE
+# $ : num NA
+
+# most of missing values in C++ has been preserved after
+  # coercing into R.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

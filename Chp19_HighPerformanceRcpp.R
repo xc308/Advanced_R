@@ -632,6 +632,120 @@ sourceCpp("R_Missing_C++.cpp")
   # coercing into R.
 
 
+#--------------------
+# 19.3.1.1 Integers
+#--------------------
+
+# with integers, missing values are stored as the smallest integer
+# they will be preserved if you don't do anything to them
+# Since C++  doesn't know the smallest integer will be preserved
+# you will likely to get an incorrect value if you do anything to it
+
+# So if you want to work with missing values in integers
+  # either use a length one IntegerVector
+  # or be very careful
+
+
+library(Rcpp)
+evalCpp('NA_INTEGER + 1')
+# evaluate a C++ expression
+# [1] -2147483647
+
+
+#----------------
+# 19.3.1.2 Doubles
+#----------------
+
+# With Doubles, 
+  # may get away with ignoring missing values
+  # and working with NaNs (not a number)
+
+  # any logical expression that involves a NaN or NAN(in C++)
+    # always evaluates as FALSE
+
+evalCpp('NAN == 1')
+# [1] FALSE
+
+evalCpp('NAN < 1')
+# [1] FALSE
+
+evalCpp('NAN > 1')
+# [1] FALSE
+
+evalCpp('NAN == NAN')
+# [1] FALSE
+
+
+## but when combining with booling values
+evalCpp("NAN && TRUE")
+# [1] TRUE
+
+evalCpp("NAN || FALSE")
+# [1] TRUE
+
+
+## But in numeric contexts, NANs will propagate NAs
+evalCpp("NAN + 2")
+# [1] NaN
+
+evalCpp("NAN - 2")
+# [1] NaN
+
+evalCpp("NAN * 2")
+# [1] NaN
+
+evalCpp("NAN / 2")
+# [1] NaN
+
+
+#--------------
+# 19.3.2 Strings
+#--------------
+
+# String is a scalar string class introduced by Rcpp
+  # it knows how to deal with missing values
+
+
+#---------------
+# 19.3.3 Boolean
+#---------------
+
+# C++ 's bool scalar has two possible values T or F
+# a logical vector in R has TRUE, FALSE, NA
+
+# if coerce a length 1 logical vector to R  
+  # make sure it doesn't contain any missing values 
+  # otherwise they will be converted to TRUE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

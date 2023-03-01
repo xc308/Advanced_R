@@ -719,6 +719,33 @@ evalCpp("NAN / 2")
 
 
 
+#==============
+# 19.3.4 Vectors
+#==============
+
+# With vectors, need to use a missing value specific to the 
+  # type of vector, 
+  # NA_REAL, NA_INTEGER, NA_LOGICAL, NA_STRING
+
+library(Rcpp)
+sourceCpp("Vector_C++_to_R.cpp")
+# str(missing_sampler())
+#List of 4
+#$ : num NA
+#$ : int NA
+#$ : logi NA
+#$ : chr NA
+
+
+
+## To check if a value in vector is missing, 
+  # use the class method ::is_na()
+
+library(Rcpp)
+sourceCpp("Check_NA_in_Vector.cpp")
+
+
+
 
 
 

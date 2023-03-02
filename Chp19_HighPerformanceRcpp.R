@@ -745,6 +745,47 @@ library(Rcpp)
 sourceCpp("Check_NA_in_Vector.cpp")
 
 
+#================
+# 19.4 Rcpp Sugar
+#================
+
+# sugar to ensure C++ functions works very similarly 
+  # to their R equivalents
+
+
+# sugar functions:
+  # arithmetic and logical operators
+  # logical summary functions
+  # vector views
+  # other useful functions
+
+
+#--------
+# 19.4.1 Arithmetic and logical operators
+#--------
+
+# arithmetic and logical operators are vectorised:
+  # + * - / pow 
+  # < <= > >= == != !
+
+
+# use sugar to considerably simplify the implementation 
+  # of pdistC()
+
+pdistR <- function(x, ys) {
+  sqrt((s - ys)^2)
+}
+
+library(Rcpp)
+sourceCpp("Sugar_pow.cpp")
+x <- 3
+y <- rnorm(10)
+pdistC(x, ys = y)
+# [1] 1.224793 3.177128 3.949213 2.494650
+# [5] 1.220628 3.424891 2.552759 1.616188
+# [9] 1.891071 2.762183
+
+
 
 
 

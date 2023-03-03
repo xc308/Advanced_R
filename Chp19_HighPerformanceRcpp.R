@@ -832,6 +832,48 @@ sourceCpp("Logical_summary.cpp")
 
 
 
+#--------------------
+# 19.4.3 Vector Views
+#--------------------
+
+# helpful functions provide a "view" of a vector:
+  # head(), tail(), rep_each(), rep_len(), rev(), 
+  # seq_along(), seq_len()
+
+
+# In R, these would all produce copies of vector
+# In Rcpp, they simply point to the existing vector 
+  # and override the subsetting operator ([])
+  # to implement special behaviour
+
+# so much efficient 
+  # e.g. rep_len(x, 1e6) do not make millions of copies of x
+
+rep_len() 
+# replicate the values with given length.out
+
+
+#------------------------
+# other useful functions
+#------------------------
+
+# p416
+
+# noNA(x) asserts the vector x does not contain any missing
+  # values and allows optimisation of some math operations. 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -787,6 +787,52 @@ pdistC(x, ys = y)
 
 
 
+#-----------------------------------
+# 19.4.2 Logical summary functions
+#-----------------------------------
+
+# any() all()
+  # any(x == 0) one evaluate one element of a vector
+  # return a special type can convert into a bool 
+  # using .is_ture(), .is_false(), .is_na()
+
+# can use this sugar to write an efficient function
+  # to determine whether or not a numeric vector contains
+  # any missing values
+
+# in R: 
+any_naR <- function(x) {
+  any(is.na(x))
+}
+
+library(Rcpp)
+sourceCpp("Logical_summary.cpp")
+
+# microbenchmark::microbenchmark(
++   any_naR(x0), any_naC(x0),
++   any_naR(x1), any_naC(x1),
++   any_naR(x2), any_naC(x2)
++ )
+#Unit: microseconds
+#expr     min       lq      mean
+#any_naR(x0) 168.626 246.1255 264.49403
+#any_naC(x0) 218.001 218.7500 225.05065
+#any_naR(x1) 168.751 250.3340 293.17022
+#any_naC(x1) 218.043 218.7090 227.03070
+#any_naR(x2)  75.709 154.8965 201.56982
+#any_naC(x2)   1.001   1.2920   8.40196
+#median       uq      max neval
+#257.6880 275.0840 1358.792   100
+#222.5210 228.6465  248.084   100
+#263.4175 281.2930 3661.584   100
+#222.6460 229.8755  325.793   100
+#165.1255 194.8550 3496.793   100
+#1.5430   2.0420  618.042   100
+
+
+
+
+
 
 
 

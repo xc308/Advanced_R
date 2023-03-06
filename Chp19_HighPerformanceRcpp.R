@@ -864,6 +864,67 @@ rep_len()
 
 
 
+#=================
+# 19.5 The STL
+#=================
+
+# real strength of C++ when need to implement more complex algo
+
+# The standard templete library (STL)
+  # provides a set of extremely useful data structure and algo
+
+# explain the most important algo and data structure
+
+# if the algo or data structure not implemented in STL
+  # a good place to start is boost
+
+# install boost, then
+  # can include boost data structures and algo 
+  # by including appropriate header file with 
+  # #include <boost/array.hpp>
+
+
+#-----------------------
+# 19.5.1 Using iterations
+#-----------------------
+
+# iterators are used extensively in the STL
+  # many functions either accept or return iterators
+  
+# iterators have 3 main operators:
+  # advance with ++
+  # get the value they refer to *
+  # compare with ==
+
+
+# rewrite the sum function using iterations
+library(Rcpp)
+sourceCpp("Iterator.cpp")
+# sum3(x)
+# [1] -16.44646
+
+
+sourceCpp("accumulate_in_numeric.cpp")
+#  sum(x)
+# [1] 95.71833
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

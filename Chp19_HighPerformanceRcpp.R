@@ -910,6 +910,168 @@ sourceCpp("accumulate_in_numeric.cpp")
 
 
 
+#==================
+# 19.5.2 Algorithms
+#==================
+
+# <algorithm> header provides a larger number of algo 
+  # that work with iterations
+
+# 
+
+
+#=======================
+# 19.5.3 Data structures
+#=======================
+
+# most important data structure:
+  # vector, unordered_set, unordered_map
+
+# Rcpp knows how to convert from many STL data structures 
+  # to R equivalents, 
+
+
+#--------------------
+# 19.5.4 Vectors STL
+#--------------------
+
+# STL vectors very similar to R vector
+  # except it grows efficiently
+  # makes vectors appropriate to use when you don't know
+    # how big the output will be
+
+# Vectors are templatd
+  # you need to specify the type of obj the vector
+    # will contain when you create it:
+      # vector<int>, vector<bool>, vector<double>, vector<String>
+
+# access the elements of a vector using []
+# add a new element at the end of the vector 
+    # using .push_back()
+
+# if have idea how big the vector will be, 
+  # use .reserve() to allocate sufficient storage
+
+
+
+# -----------
+# 19.5.5 Sets
+# -----------
+
+# Sets maintain a unique set of values, 
+  # can efficiently tell if the value has been seen before
+
+# useful for problem involving:
+  # duplicates or unique values
+  # like unique, duplicated, in
+
+# C++ provides both 
+  # ordered set (std::set)
+  # unordered set (std::unordered set)
+
+# Unordered set: faster, 
+  # use a hash table internally (key-value pair dictionary)
+  # rather than tree
+
+  # so should use unordered set then sorting the output
+
+
+# Sets are temperlated (same as vector)
+  # need to request the appropriate type of set
+  # unordered_set<int>, unordered_set<bool>, 
+
+
+# Example:
+  # uses unordered set to implement an equivalent to 
+    # duplicate() for integer vecotors. 
+
+  # the use of see.insert(x[i]).second. insert() returns a pair
+  # the .first value is an iterator that points to element 
+  # the .second value is a boolean that's ture if the value
+    # was a new addition to the set
+
+library(Rcpp)
+sourceCpp("Unordered_set.cpp")  
+# > x <- c(4, 2, 4, 8, 0)
+#> duplicatedC(x)
+#[1] FALSE FALSE  TRUE FALSE FALSE
+
+
+#-----------------
+# 19.5.6 Map
+#-----------------
+
+# A map:
+  # similar to a set
+  # but instead of sorting presence or absence
+    # it can store additional data
+
+  # useful for functions like table() or match() that need
+  # to look up a value
+
+  # there are 
+    # ordered_map std::map
+    # unordered_map std::unordered_map
+
+  # maps have a value and a key
+    # need to specify both types when initialising a map
+      # map<double, int>
+      # unordered_map<double, double> etc.
+
+# examples:
+  # shows using a map to implement table() for numeric vectors
+
+
+
+x <- c(4, 3, 8, 9, 9, 2, 4)
+table(x)
+# x
+#2 3 4 8 9 
+#1 1 2 1 2
+
+sourceCpp("Map.cpp")
+# > x <- c(4, 3, 8, 9, 9, 2, 4)
+
+#> tableC(x)
+#2 3 4 8 9 
+#1 1 2 1 2 
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

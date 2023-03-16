@@ -1037,6 +1037,59 @@ sourceCpp("Map.cpp")
 #1 1 2 1 2 
 
 
+#===================
+# 19.6 Case Studies
+#===================
+
+# Use C++ to replace slow R
+
+#--------------
+# Gibbs Sampler
+#--------------
+
+gibbs_r <- function(N, thin) {
+  mat <- matrix(NA, nrow = N, ncol = 2)
+  x <- y <- 0
+  
+  for (i in 1:N) {
+    for (j in 1:thin) {
+      x <- rgamma(1, shape = 3, rate = y*y + 4)
+      y <- rnorm(1, mean = 1/(x+1), sd = 1/sqrt(2*(x+1)))
+    }
+    mat[i, ] <- c(x, y)
+  }
+}
+
+
+library(Rcpp)
+sourceCpp("Gibbs_C.cpp")
+
+microbenchmark::microbenchmark(
+  gibbs_r(N = 100, thin = 10),
+  gibbs_C(N = 100, thin = 10)
+)
+
+# Unit: microseconds
+#Unit: microseconds
+#                       expr      min       lq      mean   median
+#gibbs_r(N = 100, thin = 10) 3237.376 3266.979 4064.2569 3306.168
+#gibbs_C(N = 100, thin = 10)  311.043  318.146  324.2461  322.355
+
+# 10 times faster
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

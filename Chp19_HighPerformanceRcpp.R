@@ -1079,6 +1079,81 @@ microbenchmark::microbenchmark(
 
 
 
+#==============================
+# 19.7 Using Rcpp in a package
+#==============================
+
+# C++ code together with sourceCpp()
+  # can also be bundled into a package
+
+# benefits of moving standalone C++ source file 
+  # to a package:
+
+  # Your code can be available to users w/o C++ development tools
+  # multiple source files and their dependencies are handled automatically by R package build system
+  # packages provide additional infrastructure for testing
+    # documentation, and consistency
+
+
+# To add Rcpp to an existing package, 
+  # put your C++ files in the src/directory
+  # then modify following configuration files:
+    # In DESCRIPTION add:
+      # LinkingTo: Rcpp
+      # Imports: Rcpp
+
+    # make sure NAMESPACE includes:
+      # useDynLib(mypackage)
+      # importFrom(Rcpp, sourceCpp)
+
+
+# to generate a new Rcpp package that includes
+  # a simple "hello world" function, 
+    # use Rcpp.package.skeleton()
+
+Rcpp.package.skeleton("NewPackage", attributes = T)
+
+# To generate a package based on C++ files that you've 
+  # been using with sourceCpp(), use the cpp_files parameter:
+
+Rcpp.package.skeleton("NewPackage", example_code = F, 
+                      cpp_files = c("convolve.cpp"))
+
+# before building the package, 
+  # need to run Rcpp::compileAttributes()
+  # This function scans the C++ files for Rcpp:export
+  # attributes and generates the code required to make
+    # the functions available in R. 
+
+# re-run compileAttributes() whenever functions are added
+  # removed, or have their signiture changed. 
+  # This is done automatically by the devtools package and
+    # by Rstudio
+
+vignette("Rcpp-package")
+
+
+# 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
